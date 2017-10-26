@@ -77,7 +77,7 @@ bool DynamixelWorkbench::setID(uint8_t id, uint8_t new_id)
 {
   bool check = false;
 
-  torque(id, FALSE);
+  torque(id, false);
 
   check = driver_.writeRegister(id, "ID", new_id);
 
@@ -94,7 +94,7 @@ bool DynamixelWorkbench::setBaud(uint8_t id, uint32_t new_baud)
 {
   bool check = false;
 
-  torque(id, FALSE);
+  torque(id, false);
 
   if (driver_.getProtocolVersion() == 1.0)
   {
@@ -159,11 +159,11 @@ bool DynamixelWorkbench::jointMode(uint8_t id, uint16_t vel, uint16_t acc)
 {
   strcpy(dxl_, driver_.getModelName(id));
 
-  torque(id, FALSE);
+  torque(id, false);
 
   setPositionControlMode(id);
 
-  torque(id, TRUE);
+  torque(id, false);
 
   if (driver_.getProtocolVersion() == 1.0)
   {
@@ -187,11 +187,11 @@ bool DynamixelWorkbench::wheelMode(uint8_t id, uint16_t vel, uint16_t acc)
 {
   strcpy(dxl_, driver_.getModelName(id));
 
-  torque(id, FALSE);
+  torque(id, false);
 
   setVelocityControlMode(id);
 
-  torque(id, TRUE);
+  torque(id, false);
 
   if (driver_.getProtocolVersion() == 2.0 && (strncmp(dxl_, "PRO", 3) != 0))
   {   
@@ -204,11 +204,11 @@ bool DynamixelWorkbench::currentMode(uint8_t id, uint8_t cur)
 {
   strcpy(dxl_, driver_.getModelName(id));
   
-  torque(id, FALSE);
+  torque(id, false);
 
   setCurrentControlMode(id);
 
-  torque(id, TRUE);
+  torque(id, false);
 
   if (!strncmp(dxl_, "X", 1))
   {   
@@ -436,7 +436,12 @@ bool DynamixelWorkbench::setCurrentControlMode(uint8_t id)
   }   
   else
   {
+#if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Position control based current control is only support in X series");
+#else
+    printf("Position control based current control is only support in X series\n");
+#endif
+
   }
 #if defined(__OPENCR__) || defined(__OPENCM904__)
   delay(10);

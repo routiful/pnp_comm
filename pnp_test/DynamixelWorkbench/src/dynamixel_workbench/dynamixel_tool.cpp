@@ -242,3 +242,8 @@ ControlTableItem* DynamixelTool::getControlItem(char* item_name)
     }
   }
 }
+
+ControlTableItem* DynamixelTool::getControlItem()
+{
+  return item_;
+}

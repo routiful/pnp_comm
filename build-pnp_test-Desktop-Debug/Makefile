@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../pnp_test -I. -I/opt/qt57/include -I/opt/qt57/include/QtWidgets -I/opt/qt57/include/QtGui -I/opt/qt57/include/QtCore -I. -I. -I/opt/qt57/mkspecs/linux-g++
+INCPATH       = -I../pnp_test -I. -I../pnp_test/DynamixelSDK/c++/build/linux64 -I/opt/qt57/include -I/opt/qt57/include/QtWidgets -I/opt/qt57/include/QtGui -I/opt/qt57/include/QtCore -I. -I. -I/opt/qt57/mkspecs/linux-g++
 QMAKE         = /opt/qt57/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = pnp_test1.0.0
 DISTDIR = /home/darby/qt_ws/pnp_comm/build-pnp_test-Desktop-Debug/.tmp/pnp_test1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/opt/qt57/lib
-LIBS          = $(SUBLIBS) -L/opt/qt57/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/home/darby/qt_ws/pnp_comm/pnp_test/DynamixelSDK/c++/build/linux64/ -ldxl_x64_cpp -L/opt/qt57/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -50,76 +50,137 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../pnp_test/main.cpp \
 		../pnp_test/mainwindow.cpp \
-		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/dxl_monitor.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/bulk_read.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/multi_port.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/reset.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/sync_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/broadcast_ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/bulk_read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/factory_reset.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/indirect_address.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/multi_port.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/reboot.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/sync_read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol_combined/protocol_combined.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_read.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_write.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_read.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_write.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/packet_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_arduino.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_linux.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_mac.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_windows.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol1_packet_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol2_packet_handler.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_item.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_tool.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_workbench.cpp moc_mainwindow.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
-		dxl_monitor.o \
-		bulk_read.o \
-		multi_port.o \
-		ping.o \
-		read_write.o \
-		reset.o \
-		sync_write.o \
-		broadcast_ping.o \
-		bulk_read_write.o \
-		factory_reset.o \
-		indirect_address.o \
-		multi_port.o \
-		ping.o \
-		read_write.o \
-		reboot.o \
-		sync_read_write.o \
-		protocol_combined.o \
-		group_bulk_read.o \
-		group_bulk_write.o \
-		group_sync_read.o \
-		group_sync_write.o \
-		packet_handler.o \
-		port_handler.o \
-		port_handler_arduino.o \
-		port_handler_linux.o \
-		port_handler_mac.o \
-		port_handler_windows.o \
-		protocol1_packet_handler.o \
-		protocol2_packet_handler.o \
 		dynamixel_driver.o \
 		dynamixel_item.o \
 		dynamixel_tool.o \
 		dynamixel_workbench.o \
 		moc_mainwindow.o
-DIST          = /opt/qt57/mkspecs/features/spec_pre.prf \
+DIST          = ../pnp_test/DynamixelSDK/c++/build/win32/output/dxl_x86_cpp.lib \
+		../pnp_test/DynamixelSDK/c++/build/win64/output/dxl_x64_cpp.lib \
+		../pnp_test/DynamixelSDK/c++/build/win32/output/dxl_x86_cpp.dll \
+		../pnp_test/DynamixelSDK/c++/build/win64/output/dxl_x64_cpp.dll \
+		../pnp_test/DynamixelSDK/c++/build/linux64/libdxl_x64_cpp.so \
+		../pnp_test/DynamixelSDK/c++/package.xml \
+		../pnp_test/DynamixelSDK/c++/build/win32/dxl_x86_cpp/dxl_x86_cpp.vcxproj \
+		../pnp_test/DynamixelSDK/c++/build/win32/dxl_x86_cpp/dxl_x86_cpp.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/build/win32/dxl_x86_cpp.sln \
+		../pnp_test/DynamixelSDK/c++/build/win64/dxl_x64_cpp/dxl_x64_cpp.vcxproj \
+		../pnp_test/DynamixelSDK/c++/build/win64/dxl_x64_cpp/dxl_x64_cpp.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/build/win64/dxl_x64_cpp.sln \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win32/dxl_monitor/dxl_monitor.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win32/dxl_monitor/dxl_monitor.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win32/dxl_monitor.sln \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win64/dxl_monitor/dxl_monitor.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win64/dxl_monitor/dxl_monitor.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/win64/dxl_monitor.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win32/bulk_read/bulk_read.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win32/bulk_read/bulk_read.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win32/bulk_read.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win64/bulk_read/bulk_read.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win64/bulk_read/bulk_read.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/win64/bulk_read.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win32/multi_port/multi_port.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win32/multi_port/multi_port.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win32/multi_port.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win64/multi_port/multi_port.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win64/multi_port/multi_port.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/win64/multi_port.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win32/ping/ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win32/ping/ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win32/ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win64/ping/ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win64/ping/ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/win64/ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win32/read_write/read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win32/read_write/read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win32/read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win64/read_write/read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win64/read_write/read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/win64/read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win32/reset/reset.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win32/reset/reset.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win32/reset.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win64/reset/reset.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win64/reset/reset.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/win64/reset.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win32/sync_write/sync_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win32/sync_write/sync_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win32/sync_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win64/sync_write/sync_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win64/sync_write/sync_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/win64/sync_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win32/broadcast_ping/broadcast_ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win32/broadcast_ping/broadcast_ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win32/broadcast_ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win64/broadcast_ping/broadcast_ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win64/broadcast_ping/broadcast_ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/win64/broadcast_ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win32/bulk_read_write/bulk_read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win32/bulk_read_write/bulk_read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win32/bulk_read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win64/bulk_read_write/bulk_read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win64/bulk_read_write/bulk_read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/win64/bulk_read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win32/factory_reset/factory_reset.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win32/factory_reset/factory_reset.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win32/factory_reset.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win64/factory_reset/factory_reset.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win64/factory_reset/factory_reset.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/win64/factory_reset.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win32/indirect_address/indirect_address.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win32/indirect_address/indirect_address.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win32/indirect_address.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win64/indirect_address/indirect_address.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win64/indirect_address/indirect_address.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/win64/indirect_address.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win32/multi_port/multi_port.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win32/multi_port/multi_port.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win32/multi_port.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win64/multi_port/multi_port.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win64/multi_port/multi_port.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/win64/multi_port.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win32/ping/ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win32/ping/ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win32/ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win64/ping/ping.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win64/ping/ping.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/win64/ping.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win32/read_write/read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win32/read_write/read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win32/read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win64/read_write/read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win64/read_write/read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/win64/read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win32/reboot/reboot.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win32/reboot/reboot.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win32/reboot.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win64/reboot/reboot.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win64/reboot/reboot.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/win64/reboot.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win32/sync_read_write/sync_read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win32/sync_read_write/sync_read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win32/sync_read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win64/sync_read_write/sync_read_write.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win64/sync_read_write/sync_read_write.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/win64/sync_read_write.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win32/protocol_combined/protocol_combined.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win32/protocol_combined/protocol_combined.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win32/protocol_combined.sln \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win64/protocol_combined/protocol_combined.vcxproj \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win64/protocol_combined/protocol_combined.vcxproj.filters \
+		../pnp_test/DynamixelSDK/c++/example/protocol_combined/win64/protocol_combined.sln \
+		../pnp_test/DynamixelSDK/c++/CHANGELOG.rst \
+		../pnp_test/DynamixelSDK/c++/keywords.txt \
+		../pnp_test/DynamixelSDK/c++/library.properties \
+		../pnp_test/DynamixelSDK/c++/CMakeLists.txt \
+		../pnp_test/DynamixelSDK/c++/README.md \
+		/opt/qt57/mkspecs/features/spec_pre.prf \
 		/opt/qt57/mkspecs/common/unix.conf \
 		/opt/qt57/mkspecs/common/linux.conf \
 		/opt/qt57/mkspecs/common/sanitize.conf \
@@ -224,51 +285,8 @@ DIST          = /opt/qt57/mkspecs/features/spec_pre.prf \
 		../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_item.h \
 		../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h \
 		../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_workbench.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/dynamixel_sdk.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_read.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_write.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_read.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_write.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_arduino.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_linux.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_mac.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_windows.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol1_packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol2_packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/src/DynamixelSDK.h \
 		../pnp_test/DynamixelWorkbench/src/DynamixelWorkbench.h ../pnp_test/main.cpp \
 		../pnp_test/mainwindow.cpp \
-		../pnp_test/DynamixelSDK/c++/example/dxl_monitor/dxl_monitor.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/bulk_read.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/multi_port.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/reset.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/sync_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/broadcast_ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/bulk_read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/factory_reset.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/indirect_address.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/multi_port.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/ping.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/reboot.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/sync_read_write.cpp \
-		../pnp_test/DynamixelSDK/c++/example/protocol_combined/protocol_combined.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_read.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_write.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_read.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_write.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/packet_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_arduino.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_linux.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_mac.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_windows.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol1_packet_handler.cpp \
-		../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol2_packet_handler.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_item.cpp \
 		../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_tool.cpp \
@@ -505,8 +523,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../pnp_test/mainwindow.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/control_table_item.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_driver.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_item.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_workbench.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/dynamixel_sdk.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_read.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_write.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_read.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_write.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_arduino.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_linux.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_mac.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_windows.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol1_packet_handler.h ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol2_packet_handler.h ../pnp_test/DynamixelSDK/c++/src/DynamixelSDK.h ../pnp_test/DynamixelWorkbench/src/DynamixelWorkbench.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../pnp_test/main.cpp ../pnp_test/mainwindow.cpp ../pnp_test/DynamixelSDK/c++/example/dxl_monitor/dxl_monitor.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/bulk_read.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/multi_port.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/ping.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/read_write.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/reset.cpp ../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/sync_write.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/broadcast_ping.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/bulk_read_write.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/factory_reset.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/indirect_address.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/multi_port.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/ping.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/read_write.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/reboot.cpp ../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/sync_read_write.cpp ../pnp_test/DynamixelSDK/c++/example/protocol_combined/protocol_combined.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_read.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_write.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_read.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_write.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/packet_handler.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_arduino.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_linux.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_mac.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_windows.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol1_packet_handler.cpp ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol2_packet_handler.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_item.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_tool.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_workbench.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../pnp_test/mainwindow.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/control_table_item.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_driver.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_item.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_workbench.h ../pnp_test/DynamixelWorkbench/src/DynamixelWorkbench.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../pnp_test/main.cpp ../pnp_test/mainwindow.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_item.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_tool.cpp ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_workbench.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../pnp_test/mainwindow.ui $(DISTDIR)/
 
 
@@ -652,7 +670,7 @@ moc_mainwindow.cpp: /opt/qt57/include/QtWidgets/QMainWindow \
 		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_write.h \
 		../pnp_test/mainwindow.h \
 		/opt/qt57/bin/moc
-	/opt/qt57/bin/moc $(DEFINES) -I/opt/qt57/mkspecs/linux-g++ -I/home/darby/qt_ws/pnp_comm/pnp_test -I/opt/qt57/include -I/opt/qt57/include/QtWidgets -I/opt/qt57/include/QtGui -I/opt/qt57/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../pnp_test/mainwindow.h -o moc_mainwindow.cpp
+	/opt/qt57/bin/moc $(DEFINES) -I/opt/qt57/mkspecs/linux-g++ -I/home/darby/qt_ws/pnp_comm/pnp_test -I/home/darby/qt_ws/pnp_comm/pnp_test/DynamixelSDK/c++/build/linux64 -I/opt/qt57/include -I/opt/qt57/include/QtWidgets -I/opt/qt57/include/QtGui -I/opt/qt57/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../pnp_test/mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -943,12 +961,6 @@ mainwindow.o: ../pnp_test/mainwindow.cpp ../pnp_test/mainwindow.h \
 		/opt/qt57/include/QtWidgets/qstyle.h \
 		/opt/qt57/include/QtWidgets/qtabbar.h \
 		/opt/qt57/include/QtWidgets/qrubberband.h \
-		/opt/qt57/include/QtWidgets/QLineEdit \
-		/opt/qt57/include/QtWidgets/qlineedit.h \
-		/opt/qt57/include/QtGui/qtextcursor.h \
-		/opt/qt57/include/QtGui/qtextformat.h \
-		/opt/qt57/include/QtGui/qpen.h \
-		/opt/qt57/include/QtGui/qtextoption.h \
 		/opt/qt57/include/QtWidgets/QMenuBar \
 		/opt/qt57/include/QtWidgets/qmenubar.h \
 		/opt/qt57/include/QtWidgets/qmenu.h \
@@ -958,110 +970,6 @@ mainwindow.o: ../pnp_test/mainwindow.cpp ../pnp_test/mainwindow.h \
 		/opt/qt57/include/QtWidgets/qtoolbar.h \
 		/opt/qt57/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../pnp_test/mainwindow.cpp
-
-dxl_monitor.o: ../pnp_test/DynamixelSDK/c++/example/dxl_monitor/dxl_monitor.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dxl_monitor.o ../pnp_test/DynamixelSDK/c++/example/dxl_monitor/dxl_monitor.cpp
-
-bulk_read.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/bulk_read.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bulk_read.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/bulk_read/bulk_read.cpp
-
-multi_port.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/multi_port.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o multi_port.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/multi_port/multi_port.cpp
-
-ping.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/ping.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ping.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/ping/ping.cpp
-
-read_write.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/read_write.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o read_write.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/read_write/read_write.cpp
-
-reset.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/reset.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o reset.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/reset/reset.cpp
-
-sync_write.o: ../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/sync_write.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sync_write.o ../pnp_test/DynamixelSDK/c++/example/protocol1.0/sync_write/sync_write.cpp
-
-broadcast_ping.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/broadcast_ping.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o broadcast_ping.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/broadcast_ping/broadcast_ping.cpp
-
-bulk_read_write.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/bulk_read_write.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bulk_read_write.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/bulk_read_write/bulk_read_write.cpp
-
-factory_reset.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/factory_reset.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o factory_reset.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/factory_reset/factory_reset.cpp
-
-indirect_address.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/indirect_address.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o indirect_address.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/indirect_address/indirect_address.cpp
-
-multi_port.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/multi_port.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o multi_port.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/multi_port/multi_port.cpp
-
-ping.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/ping.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ping.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/ping/ping.cpp
-
-read_write.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/read_write.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o read_write.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/read_write/read_write.cpp
-
-reboot.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/reboot.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o reboot.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/reboot/reboot.cpp
-
-sync_read_write.o: ../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/sync_read_write.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sync_read_write.o ../pnp_test/DynamixelSDK/c++/example/protocol2.0/sync_read_write/sync_read_write.cpp
-
-protocol_combined.o: ../pnp_test/DynamixelSDK/c++/example/protocol_combined/protocol_combined.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o protocol_combined.o ../pnp_test/DynamixelSDK/c++/example/protocol_combined/protocol_combined.cpp
-
-group_bulk_read.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_read.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_read.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o group_bulk_read.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_read.cpp
-
-group_bulk_write.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_write.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_bulk_write.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o group_bulk_write.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_bulk_write.cpp
-
-group_sync_read.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_read.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_read.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o group_sync_read.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_read.cpp
-
-group_sync_write.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_write.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/group_sync_write.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o group_sync_write.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/group_sync_write.cpp
-
-packet_handler.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/packet_handler.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol1_packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol2_packet_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o packet_handler.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/packet_handler.cpp
-
-port_handler.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_arduino.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o port_handler.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler.cpp
-
-port_handler_arduino.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_arduino.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler_arduino.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o port_handler_arduino.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_arduino.cpp
-
-port_handler_linux.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_linux.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o port_handler_linux.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_linux.cpp
-
-port_handler_mac.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_mac.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o port_handler_mac.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_mac.cpp
-
-port_handler_windows.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_windows.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o port_handler_windows.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/port_handler_windows.cpp
-
-protocol1_packet_handler.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol1_packet_handler.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol1_packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o protocol1_packet_handler.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol1_packet_handler.cpp
-
-protocol2_packet_handler.o: ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol2_packet_handler.cpp ../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/protocol2_packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/packet_handler.h \
-		../pnp_test/DynamixelSDK/c++/include/dynamixel_sdk/port_handler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o protocol2_packet_handler.o ../pnp_test/DynamixelSDK/c++/src/dynamixel_sdk/protocol2_packet_handler.cpp
 
 dynamixel_driver.o: ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_driver.h \
 		../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h \

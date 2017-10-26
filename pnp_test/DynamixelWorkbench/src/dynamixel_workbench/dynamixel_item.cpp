@@ -87,7 +87,7 @@ void setAXItem()
   item[31] = {48 , "Punch"                         , 2 , READ_WRITE , RAM};
 
   control_table_size = 32;
-#endif  
+#endif
 }
 
 void setAXInfo()
@@ -166,7 +166,7 @@ void setRXItem()
   item[31] = {48 , "Punch"                         , 2 , READ_WRITE , RAM};
 
   control_table_size = 32;
-#endif  
+#endif
 }
 
 void setRXInfo()
@@ -249,7 +249,7 @@ void setEXItem()
   item[33] = {56 , "Sensored Current"              , 2 , READ       , RAM};
 
   control_table_size = 34;
-#endif  
+#endif
 }
 
 void setEXInfo()
@@ -330,7 +330,7 @@ void setMXItem()
   item[33] = {73 , "Goal Acceleration"             , 1 , READ_WRITE , RAM};
 
   control_table_size = 34;
-#endif  
+#endif
 }
 
 void setMXInfo()
@@ -417,7 +417,7 @@ void setExtMXItem()
   item[36] = {73 , "Goal Acceleration"             , 1 , READ_WRITE , RAM};
 
   control_table_size = 37;
-#endif  
+#endif
 }
 
 void setExtMXInfo()
@@ -495,7 +495,7 @@ void setXL320Item()
   item[30] = {51 , "Punch"                         , 2 , READ_WRITE , RAM};
 
   control_table_size = 31;
-#endif  
+#endif
 }
 
 void setXL320Info()
@@ -593,7 +593,7 @@ void setXLItem()
   item[50] = {146, "Present Temperature"   , 1 , READ       , RAM};
 
   control_table_size = 51;
-#endif  
+#endif
 }
 
 void setXLInfo()
@@ -691,7 +691,7 @@ void setXMItem()
   item[50] = {146, "Present Temperature"   , 1 , READ       , RAM};
 
   control_table_size = 51;
-#endif  
+#endif
 }
 
 void setXMInfo()
@@ -790,7 +790,7 @@ void setXHItem()
   item[50] = {146, "Present Temperature"   , 1 , READ       , RAM};
 
   control_table_size = 51;
-#endif  
+#endif
 }
 
 void setXHInfo()
@@ -805,89 +805,89 @@ void setXHInfo()
   model_info.max_radian = 3.14159265;
 }
 
-static void setPROItem()
-{
-  #if defined(__OPENCR__) || defined(__OPENCM904__)
-  item[0]  = {7  , "ID"                    , 1 , READ_WRITE , EEPROM};
-  item[1]  = {8  , "Baud Rate"             , 1 , READ_WRITE , EEPROM};
-  item[2]  = {11 , "Operating Mode"        , 1 , READ_WRITE , EEPROM};
+//static void setPROItem()
+//{
+//  #if defined(__OPENCR__) || defined(__OPENCM904__)
+//  item[0]  = {7  , "ID"                    , 1 , READ_WRITE , EEPROM};
+//  item[1]  = {8  , "Baud Rate"             , 1 , READ_WRITE , EEPROM};
+//  item[2]  = {11 , "Operating Mode"        , 1 , READ_WRITE , EEPROM};
 
-  item[3]  = {562, "Torque Enable"         , 1 , READ_WRITE , RAM};
-  item[4]  = {563, "LED RED"               , 1 , READ_WRITE , RAM};
-  item[5]  = {564, "LED GREEN"             , 1 , READ_WRITE , RAM};
-  item[6]  = {565, "LED BLUE"              , 1 , READ_WRITE , RAM};
-  item[7]  = {586, "Velocity I Gain"       , 2 , READ_WRITE , RAM};
-  item[8]  = {588, "Velocity P Gain"       , 2 , READ_WRITE , RAM};
-  item[9]  = {594, "Position P Gain"       , 2 , READ_WRITE , RAM};
-  item[10] = {596, "Goal Position"         , 4 , READ_WRITE , RAM};
-  item[11] = {600, "Goal Velocity"         , 4 , READ_WRITE , RAM};
-  item[12] = {604, "Goal Torque"           , 2 , READ_WRITE , RAM};
-  item[13] = {606, "Goal Acceleration"     , 4 , READ_WRITE , RAM};
-  item[14] = {610, "Moving"                , 1 , READ       , RAM};
-  item[15] = {611, "Present Position"      , 4 , READ       , RAM};
-  item[16] = {615, "Present Velocity"      , 4 , READ       , RAM};
-  item[17] = {621, "Present Current"       , 2 , READ       , RAM};
-  item[18] = {623, "Present Input Voltage" , 2 , READ       , RAM};
-  item[19] = {625, "Present Temperature"   , 1 , READ       , RAM};
-  item[20] = {890, "Registered Instruction", 1 , READ       , RAM};
-  item[21] = {891, "Status Return Level"   , 1 , READ_WRITE , RAM};
-  item[22] = {892, "Hardware Error Status" , 1 , READ       , RAM};
+//  item[3]  = {562, "Torque Enable"         , 1 , READ_WRITE , RAM};
+//  item[4]  = {563, "LED RED"               , 1 , READ_WRITE , RAM};
+//  item[5]  = {564, "LED GREEN"             , 1 , READ_WRITE , RAM};
+//  item[6]  = {565, "LED BLUE"              , 1 , READ_WRITE , RAM};
+//  item[7]  = {586, "Velocity I Gain"       , 2 , READ_WRITE , RAM};
+//  item[8]  = {588, "Velocity P Gain"       , 2 , READ_WRITE , RAM};
+//  item[9]  = {594, "Position P Gain"       , 2 , READ_WRITE , RAM};
+//  item[10] = {596, "Goal Position"         , 4 , READ_WRITE , RAM};
+//  item[11] = {600, "Goal Velocity"         , 4 , READ_WRITE , RAM};
+//  item[12] = {604, "Goal Torque"           , 2 , READ_WRITE , RAM};
+//  item[13] = {606, "Goal Acceleration"     , 4 , READ_WRITE , RAM};
+//  item[14] = {610, "Moving"                , 1 , READ       , RAM};
+//  item[15] = {611, "Present Position"      , 4 , READ       , RAM};
+//  item[16] = {615, "Present Velocity"      , 4 , READ       , RAM};
+//  item[17] = {621, "Present Current"       , 2 , READ       , RAM};
+//  item[18] = {623, "Present Input Voltage" , 2 , READ       , RAM};
+//  item[19] = {625, "Present Temperature"   , 1 , READ       , RAM};
+//  item[20] = {890, "Registered Instruction", 1 , READ       , RAM};
+//  item[21] = {891, "Status Return Level"   , 1 , READ_WRITE , RAM};
+//  item[22] = {892, "Hardware Error Status" , 1 , READ       , RAM};
 
-  control_table_size = 23;
-#else
-  item[0]  = {0  , "Model Number"          , 2 , READ       , EEPROM};
-  item[1]  = {6  , "Version of Firmware"   , 1 , READ       , EEPROM};
-  item[2]  = {7  , "ID"                    , 1 , READ_WRITE , EEPROM};
-  item[3]  = {8  , "Baud Rate"             , 1 , READ_WRITE , EEPROM};
-  item[4]  = {9  , "Return Delay Time"     , 1 , READ_WRITE , EEPROM};
-  item[5]  = {11 , "Operating Mode"        , 1 , READ_WRITE , EEPROM};
-  item[6]  = {13 , "Homing Offset"         , 4 , READ_WRITE , EEPROM};
-  item[7]  = {17 , "Moving Threshold"      , 4 , READ_WRITE , EEPROM};
-  item[8]  = {21 , "Temperature Limit"     , 1 , READ_WRITE , EEPROM};
-  item[9]  = {22 , "Max Voltage Limit"     , 2 , READ_WRITE , EEPROM};
-  item[10] = {24 , "Min Voltage Limit"     , 2 , READ_WRITE , EEPROM};
-  item[11] = {26 , "Acceleration Limit"    , 4 , READ_WRITE , EEPROM};
-  item[12] = {30 , "Torque Limit"          , 2 , READ_WRITE , EEPROM};
-  item[13] = {32 , "Velocity Limit"        , 4 , READ_WRITE , EEPROM};
-  item[14] = {36 , "Max Position Limit"    , 4 , READ_WRITE , EEPROM};
-  item[15] = {40 , "Min Position Limit"    , 4 , READ_WRITE , EEPROM};
-  item[16] = {48 , "Shutdown"              , 1 , READ_WRITE , EEPROM};
+//  control_table_size = 23;
+//#else
+//  item[0]  = {0  , "Model Number"          , 2 , READ       , EEPROM};
+//  item[1]  = {6  , "Version of Firmware"   , 1 , READ       , EEPROM};
+//  item[2]  = {7  , "ID"                    , 1 , READ_WRITE , EEPROM};
+//  item[3]  = {8  , "Baud Rate"             , 1 , READ_WRITE , EEPROM};
+//  item[4]  = {9  , "Return Delay Time"     , 1 , READ_WRITE , EEPROM};
+//  item[5]  = {11 , "Operating Mode"        , 1 , READ_WRITE , EEPROM};
+//  item[6]  = {13 , "Homing Offset"         , 4 , READ_WRITE , EEPROM};
+//  item[7]  = {17 , "Moving Threshold"      , 4 , READ_WRITE , EEPROM};
+//  item[8]  = {21 , "Temperature Limit"     , 1 , READ_WRITE , EEPROM};
+//  item[9]  = {22 , "Max Voltage Limit"     , 2 , READ_WRITE , EEPROM};
+//  item[10] = {24 , "Min Voltage Limit"     , 2 , READ_WRITE , EEPROM};
+//  item[11] = {26 , "Acceleration Limit"    , 4 , READ_WRITE , EEPROM};
+//  item[12] = {30 , "Torque Limit"          , 2 , READ_WRITE , EEPROM};
+//  item[13] = {32 , "Velocity Limit"        , 4 , READ_WRITE , EEPROM};
+//  item[14] = {36 , "Max Position Limit"    , 4 , READ_WRITE , EEPROM};
+//  item[15] = {40 , "Min Position Limit"    , 4 , READ_WRITE , EEPROM};
+//  item[16] = {48 , "Shutdown"              , 1 , READ_WRITE , EEPROM};
 
-  item[17] = {562, "Torque Enable"         , 1 , READ_WRITE , RAM};
-  item[18] = {563, "LED RED"               , 1 , READ_WRITE , RAM};
-  item[19] = {564, "LED GREEN"             , 1 , READ_WRITE , RAM};
-  item[20] = {565, "LED BLUE"              , 1 , READ_WRITE , RAM};
-  item[21] = {586, "Velocity I Gain"       , 2 , READ_WRITE , RAM};
-  item[22] = {588, "Velocity P Gain"       , 2 , READ_WRITE , RAM};
-  item[23] = {594, "Position P Gain"       , 2 , READ_WRITE , RAM};
-  item[24] = {596, "Goal Position"         , 4 , READ_WRITE , RAM};
-  item[25] = {600, "Goal Velocity"         , 4 , READ_WRITE , RAM};
-  item[26] = {604, "Goal Torque"           , 2 , READ_WRITE , RAM};
-  item[27] = {606, "Goal Acceleration"     , 4 , READ_WRITE , RAM};
-  item[28] = {610, "Moving"                , 1 , READ       , RAM};
-  item[29] = {611, "Present Position"      , 4 , READ       , RAM};
-  item[30] = {615, "Present Velocity"      , 4 , READ       , RAM};
-  item[31] = {621, "Present Current"       , 2 , READ       , RAM};
-  item[32] = {623, "Present Input Voltage" , 2 , READ       , RAM};
-  item[33] = {625, "Present Temperature"   , 1 , READ       , RAM};
-  item[34] = {890, "Registered Instruction", 1 , READ       , RAM};
-  item[35] = {891, "Status Return Level"   , 1 , READ_WRITE , RAM};
-  item[36] = {892, "Hardware Error Status" , 1 , READ       , RAM};
+//  item[17] = {562, "Torque Enable"         , 1 , READ_WRITE , RAM};
+//  item[18] = {563, "LED RED"               , 1 , READ_WRITE , RAM};
+//  item[19] = {564, "LED GREEN"             , 1 , READ_WRITE , RAM};
+//  item[20] = {565, "LED BLUE"              , 1 , READ_WRITE , RAM};
+//  item[21] = {586, "Velocity I Gain"       , 2 , READ_WRITE , RAM};
+//  item[22] = {588, "Velocity P Gain"       , 2 , READ_WRITE , RAM};
+//  item[23] = {594, "Position P Gain"       , 2 , READ_WRITE , RAM};
+//  item[24] = {596, "Goal Position"         , 4 , READ_WRITE , RAM};
+//  item[25] = {600, "Goal Velocity"         , 4 , READ_WRITE , RAM};
+//  item[26] = {604, "Goal Torque"           , 2 , READ_WRITE , RAM};
+//  item[27] = {606, "Goal Acceleration"     , 4 , READ_WRITE , RAM};
+//  item[28] = {610, "Moving"                , 1 , READ       , RAM};
+//  item[29] = {611, "Present Position"      , 4 , READ       , RAM};
+//  item[30] = {615, "Present Velocity"      , 4 , READ       , RAM};
+//  item[31] = {621, "Present Current"       , 2 , READ       , RAM};
+//  item[32] = {623, "Present Input Voltage" , 2 , READ       , RAM};
+//  item[33] = {625, "Present Temperature"   , 1 , READ       , RAM};
+//  item[34] = {890, "Registered Instruction", 1 , READ       , RAM};
+//  item[35] = {891, "Status Return Level"   , 1 , READ_WRITE , RAM};
+//  item[36] = {892, "Hardware Error Status" , 1 , READ       , RAM};
 
-  control_table_size = 37;
-#endif  
-}
+//  control_table_size = 37;
+//#endif
+//}
 
-static void setPROInfo()
-{
-  model_info.velocity_to_value_ratio         = 4792.8;
+//static void setPROInfo()
+//{
+//  model_info.velocity_to_value_ratio         = 4792.8;
   
-  model_info.value_of_0_radian_position      = 0;
-  model_info.value_of_min_radian_position    = -250950;
-  model_info.value_of_max_radian_position    =  250950;
-  model_info.min_radian                      = -3.14159265;
-  model_info.max_radian                      =  3.14159265;
-}
+//  model_info.value_of_0_radian_position      = 0;
+//  model_info.value_of_min_radian_position    = -250950;
+//  model_info.value_of_max_radian_position    =  250950;
+//  model_info.min_radian                      = -3.14159265;
+//  model_info.max_radian                      =  3.14159265;
+//}
 
 ControlTableItem* getItem(uint16_t num)
 {
@@ -927,12 +927,12 @@ ControlTableItem* getItem(uint16_t num)
   {
     setXHItem();
   }
-  else if (num == PRO_L42_10_S300_R  || num == PRO_L54_30_S400_R || num == PRO_L54_30_S500_R || num == PRO_L54_50_S290_R || num == PRO_L54_50_S500_R  ||
-           num == PRO_M42_10_S260_R  || num == PRO_M54_40_S250_R || num == PRO_M54_60_S250_R || num == PRO_H42_20_S300_R || num == PRO_H54_100_S500_R ||
-           num == PRO_H54_200_S500_R)
-  {
-    setPROItem();
-  }
+//  else if (num == PRO_L42_10_S300_R  || num == PRO_L54_30_S400_R || num == PRO_L54_30_S500_R || num == PRO_L54_50_S290_R || num == PRO_L54_50_S500_R  ||
+//           num == PRO_M42_10_S260_R  || num == PRO_M54_40_S250_R || num == PRO_M54_60_S250_R || num == PRO_H42_20_S300_R || num == PRO_H54_100_S500_R ||
+//           num == PRO_H54_200_S500_R)
+//  {
+//    setPROItem();
+//  }
   else
   {
     setXMItem();
@@ -967,7 +967,7 @@ ModelInfo* getInfo(uint16_t num)
   {
     setXL320Info();
   }
-  else if (num == XL430_W250)
+  if (num == XL430_W250)
   {
     setXLInfo();
   }
@@ -979,12 +979,12 @@ ModelInfo* getInfo(uint16_t num)
   {
     setXHInfo();
   }
-  else if (num == PRO_L42_10_S300_R  || num == PRO_L54_30_S400_R || num == PRO_L54_30_S500_R || num == PRO_L54_50_S290_R || num == PRO_L54_50_S500_R  ||
-           num == PRO_M42_10_S260_R  || num == PRO_M54_40_S250_R || num == PRO_M54_60_S250_R || num == PRO_H42_20_S300_R || num == PRO_H54_100_S500_R ||
-           num == PRO_H54_200_S500_R)
-  {
-    setPROInfo();
-  }
+//  else if (num == PRO_L42_10_S300_R  || num == PRO_L54_30_S400_R || num == PRO_L54_30_S500_R || num == PRO_L54_50_S290_R || num == PRO_L54_50_S500_R  ||
+//           num == PRO_M42_10_S260_R  || num == PRO_M54_40_S250_R || num == PRO_M54_60_S250_R || num == PRO_H42_20_S300_R || num == PRO_H54_100_S500_R ||
+//           num == PRO_H54_200_S500_R)
+//  {
+//    setPROInfo();
+//  }
   else
   {
     setXMInfo();

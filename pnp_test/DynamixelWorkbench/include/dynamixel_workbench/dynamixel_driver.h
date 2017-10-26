@@ -36,16 +36,16 @@
 
 #define DEBUG false
 
-typedef struct
+typedef struct 
 {
-  ControlTableItem *cti;
-  dynamixel::GroupSyncWrite *groupSyncWrite;
+  ControlTableItem *cti; 
+  dynamixel::GroupSyncWrite *groupSyncWrite;    
 } SyncWriteHandler;
 
-typedef struct
+typedef struct 
 {
   ControlTableItem *cti;
-  dynamixel::GroupSyncRead  *groupSyncRead;
+  dynamixel::GroupSyncRead  *groupSyncRead;     
 } SyncReadHandler;
 
 class DynamixelDriver
@@ -59,9 +59,9 @@ class DynamixelDriver
   SyncWriteHandler syncWriteHandler_[MAX_HANDLER];
   SyncReadHandler  syncReadHandler_[MAX_HANDLER];
 
-  dynamixel::GroupBulkRead  *groupBulkRead_;
-  dynamixel::GroupBulkWrite *groupBulkWrite_;
-
+  dynamixel::GroupBulkRead  *groupBulkRead_;  
+  dynamixel::GroupBulkWrite *groupBulkWrite_;  
+ 
   DynamixelTool tools_[DXL_NUM];
 
   uint8_t tools_cnt_;
@@ -83,6 +83,7 @@ class DynamixelDriver
 
   float getProtocolVersion();
   char* getModelName(uint8_t id);
+  DynamixelTool* getTool(uint8_t id);
 
   uint8_t  scan(uint8_t *get_id, uint8_t num = 200, float protocol_version = 0.0);
   uint16_t ping(uint8_t id, float protocol_version = 0.0);

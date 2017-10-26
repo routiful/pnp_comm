@@ -31,17 +31,17 @@ DynamixelDriver::~DynamixelDriver()
   {
     if (getProtocolVersion() == 1.0)
     {
-      writeRegister(tools_[i].getID(), "Torque ON/OFF", FALSE);
+      writeRegister(tools_[i].getID(), "Torque ON/OFF", false);
     }
     else if (getProtocolVersion() == 2.0)
     {
       if (!strncmp(tools_[i].getModelName(), "XL-320", 6))
       {
-        writeRegister(tools_[i].getID(), "Torque ON/OFF", FALSE);
+        writeRegister(tools_[i].getID(), "Torque ON/OFF", false);
       }
       else
       {
-        writeRegister(tools_[i].getID(), "Torque Enable", FALSE);
+        writeRegister(tools_[i].getID(), "Torque Enable", false);
       }
     }
   }
@@ -191,6 +191,12 @@ char *DynamixelDriver::getModelName(uint8_t id)
 {
   uint8_t cnt = findTools(id);
   return tools_[cnt].getModelName();
+}
+
+DynamixelTool* DynamixelDriver::getTool(uint8_t id)
+{
+  uint8_t index = findTools(id);
+  return &tools_[index];
 }
 
 uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_version)

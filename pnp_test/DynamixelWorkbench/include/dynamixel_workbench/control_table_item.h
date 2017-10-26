@@ -23,6 +23,9 @@
 #include <Arduino.h>
 #elif defined(__linux__)
 #include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
 #endif
 
 

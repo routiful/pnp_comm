@@ -13,11 +13,13 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -27,7 +29,9 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
-    QLineEdit *lineEdit;
+    QFrame *dxl_frame;
+    QTableView *control_table_view;
+    QLineEdit *dxl_model_name_edit;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -36,16 +40,24 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(400, 300);
+        MainWindow->resize(773, 746);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        lineEdit = new QLineEdit(centralWidget);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(100, 80, 113, 22));
+        dxl_frame = new QFrame(centralWidget);
+        dxl_frame->setObjectName(QStringLiteral("dxl_frame"));
+        dxl_frame->setGeometry(QRect(0, 0, 501, 671));
+        dxl_frame->setFrameShape(QFrame::StyledPanel);
+        dxl_frame->setFrameShadow(QFrame::Raised);
+        control_table_view = new QTableView(dxl_frame);
+        control_table_view->setObjectName(QStringLiteral("control_table_view"));
+        control_table_view->setGeometry(QRect(10, 60, 491, 651));
+        dxl_model_name_edit = new QLineEdit(dxl_frame);
+        dxl_model_name_edit->setObjectName(QStringLiteral("dxl_model_name_edit"));
+        dxl_model_name_edit->setGeometry(QRect(10, 30, 113, 22));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 400, 19));
+        menuBar->setGeometry(QRect(0, 0, 773, 19));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));

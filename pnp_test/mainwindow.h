@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "DynamixelWorkbench/src/DynamixelWorkbench.h"
+#include <DynamixelWorkbench/src/DynamixelWorkbench.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,10 +17,12 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+  bool showControlTable(uint8_t id);
+
 private:
   Ui::MainWindow *ui;
 
-  DynamixelWorkbench dxl_wb_;
+  DynamixelDriver dxl_driver_;
 };
 
 #endif // MAINWINDOW_H

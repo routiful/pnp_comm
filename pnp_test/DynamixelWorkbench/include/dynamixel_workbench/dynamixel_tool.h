@@ -66,5 +66,6 @@ class DynamixelTool
 
   uint8_t getControlTableSize();    
   ControlTableItem* getControlItem(char* item_name);  
+  ControlTableItem* getControlItem();
 };
 #endif //DYNAMIXEL_TOOL_H
