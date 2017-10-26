@@ -65,7 +65,7 @@ class DynamixelTool
   float getMaxRadian();  
 
   uint8_t getControlTableSize();    
-  ControlTableItem* getControlItem(char* item_name);  
+  ControlTableItem* getControlItem(const char *item_name);
   ControlTableItem* getControlItem();
 };
 #endif //DYNAMIXEL_TOOL_H

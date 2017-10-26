@@ -229,7 +229,7 @@ uint8_t DynamixelTool::getID()
   return id_;
 }
 
-ControlTableItem* DynamixelTool::getControlItem(char* item_name)
+ControlTableItem* DynamixelTool::getControlItem(const char* item_name)
 {
   ControlTableItem* cti;
 

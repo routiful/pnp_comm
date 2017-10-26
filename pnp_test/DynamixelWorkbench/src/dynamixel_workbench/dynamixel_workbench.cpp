@@ -28,7 +28,7 @@ DynamixelWorkbench::~DynamixelWorkbench()
 
 }
 
-bool DynamixelWorkbench::begin(char* device_name, uint32_t baud_rate)
+bool DynamixelWorkbench::begin(const char *device_name, uint32_t baud_rate)
 {
   bool error = false;
 
@@ -138,21 +138,29 @@ bool DynamixelWorkbench::setBaud(uint8_t id, uint32_t new_baud)
 bool DynamixelWorkbench::setPacketHandler(float protocol_version)
 {
   driver_.setPacketHandler(protocol_version);
+
+  return true;
 }
 
 char* DynamixelWorkbench::getModelName(uint8_t id)
 {
-  driver_.getModelName(id);
+  return driver_.getModelName(id);
 }
 
 bool DynamixelWorkbench::ledOn(uint8_t id, int32_t data)
 {
-  driver_.writeRegister(id, "LED", data);
+  bool check = false;
+  check = driver_.writeRegister(id, "LED", data);
+
+  return check;
 }
 
 bool DynamixelWorkbench::ledOff(uint8_t id)
 {
-  driver_.writeRegister(id, "LED", 0);
+  bool check = false;
+  check = driver_.writeRegister(id, "LED", 0);
+
+  return check;
 }
 
 bool DynamixelWorkbench::jointMode(uint8_t id, uint16_t vel, uint16_t acc)
@@ -163,7 +171,7 @@ bool DynamixelWorkbench::jointMode(uint8_t id, uint16_t vel, uint16_t acc)
 
   setPositionControlMode(id);
 
-  torque(id, false);
+  torque(id, true);
 
   if (driver_.getProtocolVersion() == 1.0)
   {
@@ -181,6 +189,8 @@ bool DynamixelWorkbench::jointMode(uint8_t id, uint16_t vel, uint16_t acc)
       driver_.writeRegister(id, "Profile Velocity", vel);
     }
   }
+
+  return true;
 }
 
 bool DynamixelWorkbench::wheelMode(uint8_t id, uint16_t vel, uint16_t acc)
@@ -191,13 +201,15 @@ bool DynamixelWorkbench::wheelMode(uint8_t id, uint16_t vel, uint16_t acc)
 
   setVelocityControlMode(id);
 
-  torque(id, false);
+  torque(id, true);
 
   if (driver_.getProtocolVersion() == 2.0 && (strncmp(dxl_, "PRO", 3) != 0))
   {   
     driver_.writeRegister(id, "Profile Acceleration", acc);
     driver_.writeRegister(id, "Profile Velocity", vel);
   }
+
+  return true;
 }
 
 bool DynamixelWorkbench::currentMode(uint8_t id, uint8_t cur)
@@ -214,6 +226,8 @@ bool DynamixelWorkbench::currentMode(uint8_t id, uint8_t cur)
   {   
     driver_.writeRegister(id, "Goal Current", cur);
   }
+
+  return true;
 }
 
 bool DynamixelWorkbench::goalPosition(uint8_t id, uint16_t goal)
@@ -260,7 +274,10 @@ bool DynamixelWorkbench::goalSpeed(uint8_t id, int32_t goal)
 
 bool DynamixelWorkbench::regWrite(uint8_t id, char* item_name, int32_t value)
 {
-  driver_.writeRegister(id, item_name, value);
+  bool check = false;
+  check = driver_.writeRegister(id, item_name, value);
+
+  return check;
 }
 
 bool DynamixelWorkbench::syncWrite(char *item_name, int32_t* value)
@@ -279,6 +296,8 @@ int32_t DynamixelWorkbench::regRead(uint8_t id, char* item_name)
 
   if (driver_.readRegister(id, item_name, &value))
     return value;
+
+  return 0;
 }
 
 int32_t* DynamixelWorkbench::syncRead(char *item_name)
@@ -286,6 +305,8 @@ int32_t* DynamixelWorkbench::syncRead(char *item_name)
   static int32_t data[16];
   if (driver_.syncRead(item_name, data))
     return data;
+
+  return NULL;
 }
 
 int32_t DynamixelWorkbench::bulkRead(uint8_t id, char* item_name)
@@ -293,6 +314,8 @@ int32_t DynamixelWorkbench::bulkRead(uint8_t id, char* item_name)
   static int32_t data;
   if (driver_.bulkRead(id, item_name, &data))
     return data;
+
+  return 0;
 }
 
 bool DynamixelWorkbench::addSyncWrite(char* item_name)
@@ -362,6 +385,8 @@ bool DynamixelWorkbench::torque(uint8_t id, bool onoff)
       driver_.writeRegister(id, "Torque Enable", onoff);
     }
   }
+
+  return true;
 }
 
 bool DynamixelWorkbench::setPositionControlMode(uint8_t id)
@@ -397,6 +422,8 @@ bool DynamixelWorkbench::setPositionControlMode(uint8_t id)
 #else
   sleep(0.01);
 #endif
+
+  return true;
 }
 
 bool DynamixelWorkbench::setVelocityControlMode(uint8_t id)
@@ -424,6 +451,8 @@ bool DynamixelWorkbench::setVelocityControlMode(uint8_t id)
 #else
   sleep(0.01);
 #endif  
+
+  return true;
 }
 
 bool DynamixelWorkbench::setCurrentControlMode(uint8_t id)
@@ -448,4 +477,6 @@ bool DynamixelWorkbench::setCurrentControlMode(uint8_t id)
 #else
   sleep(0.01);
 #endif
+
+  return true;
 }

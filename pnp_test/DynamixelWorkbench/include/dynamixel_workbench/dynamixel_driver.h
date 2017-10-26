@@ -74,9 +74,9 @@ class DynamixelDriver
   DynamixelDriver();
   ~DynamixelDriver();
 
-  bool begin(char* device_name = "/dev/ttyUSB0", uint32_t baud_rate = 57600);
+  bool begin(const char* device_name = "/dev/ttyUSB0", uint32_t baud_rate = 57600);
 
-  void setPortHandler(char *device_name, bool *error);
+  void setPortHandler(const char *device_name, bool *error);
   void setPacketHandler(bool *error);
   void setPacketHandler(float protocol_version);
   void setBaudrate(uint32_t baud_rate, bool *error);
@@ -91,8 +91,8 @@ class DynamixelDriver
   bool reboot(uint8_t id);
   bool reset(uint8_t id);
 
-  bool writeRegister(uint8_t id, char *item_name, int32_t data);
-  bool readRegister(uint8_t id, char *item_name, int32_t *data);
+  bool writeRegister(uint8_t id, const char *item_name, int32_t data);
+  bool readRegister(uint8_t id, const char *item_name, int32_t *data);
 
   void addSyncWrite(char *item_name);
   bool syncWrite(char *item_name, int32_t *data);

@@ -889,6 +889,55 @@ void setXHInfo()
 //  model_info.max_radian                      =  3.14159265;
 //}
 
+void setPNPItem()
+{
+  item[0]  = {0  , "Model Number"             , 2 , READ       , EEPROM};
+  item[1]  = {6  , "Version of Firmware"      , 1 , READ       , EEPROM};
+  item[2]  = {7  , "ID"                       , 1 , READ_WRITE , EEPROM};
+  item[3]  = {8  , "Baud Rate"                , 1 , READ_WRITE , EEPROM};
+
+  item[4]  = {64 , "IMU Roll"                 , 2 , READ , RAM};
+  item[5]  = {66 , "IMU Pitch"                , 2 , READ , RAM};
+  item[6]  = {68 , "IMU Yaw"                  , 2 , READ , RAM};
+  item[7]  = {70 , "TempSensor"               , 2 , READ , RAM};
+  item[8]  = {72 , "TempSensor Read Time"     , 4 , READ , RAM};
+  item[9]  = {80 , "ColorSensor REd"          , 2 , READ , RAM};
+  item[10] = {82 , "ColorSensor Green"        , 2 , READ , RAM};
+  item[11] = {84 , "ColorSensor Blue"         , 2 , READ , RAM};
+  item[12] = {86 , "ColorSensor Read Time"    , 4 , READ , RAM};
+  item[13] = {90 , "AdcSensor CH1"            , 2 , READ , RAM};
+  item[14] = {92 , "AdcSensor CH2"            , 2 , READ , RAM};
+  item[15] = {94 , "AdcSensor CH3"            , 2 , READ , RAM};
+  item[16] = {96 , "AdcSensor CH4"            , 2 , READ , RAM};
+  item[17] = {92 , "AdcSensor CH5"            , 2 , READ , RAM};
+  item[18] = {100, "AdcSensor CH6"            , 2 , READ , RAM};
+  item[19] = {102, "AdcSensor CH7"            , 2 , READ , RAM};
+  item[20] = {104, "AdcSensor CH1 Read Time"  , 4 , READ , RAM};
+  item[21] = {108, "AdcSensor CH2 Read Time"  , 4 , READ , RAM};
+  item[22] = {112, "AdcSensor CH3 Read Time"  , 4 , READ , RAM};
+  item[23] = {116, "AdcSensor CH4 Read Time"  , 4 , READ , RAM};
+  item[24] = {120, "AdcSensor CH5 Read Time"  , 4 , READ , RAM};
+  item[25] = {124, "AdcSensor CH6 Read Time"  , 4 , READ , RAM};
+  item[26] = {128, "AdcSensor CH7 Read Time"  , 4 , READ , RAM};
+  item[27] = {200, "I2C_Read_Speed CH1"       , 4 , READ , RAM};
+  item[28] = {204, "I2C_Write_Speed CH1"      , 4 , READ , RAM};
+  item[29] = {208, "I2C_Read_Speed CH2"       , 4 , READ , RAM};
+  item[30] = {212, "I2C_Write_Speed CH2"      , 4 , READ , RAM};
+
+  control_table_size = 31;
+}
+
+void setPNPInfo()
+{
+  model_info.velocity_to_value_ratio         = 0.0;
+
+  model_info.value_of_0_radian_position      = 0;
+  model_info.value_of_min_radian_position    = 0;
+  model_info.value_of_max_radian_position    = 0;
+  model_info.min_radian                      = 0;
+  model_info.max_radian                      = 0;
+}
+
 ControlTableItem* getItem(uint16_t num)
 {
   if (num == AX_12A || num == AX_12W || num == AX_18A)
@@ -923,7 +972,7 @@ ControlTableItem* getItem(uint16_t num)
   {
     setXMItem();
   }
-  else if (num == XH430_V210 || num == XH430_V350 || num == XH430_W210 || num == XH430_W350)
+  else if (num == XH430_V210 || num == XH430_V350 || num == XH430_W210 /*|| num == XH430_W350*/)
   {
     setXHItem();
   }
@@ -933,6 +982,10 @@ ControlTableItem* getItem(uint16_t num)
 //  {
 //    setPROItem();
 //  }
+  else if (num == PNP_DEVELOPMENT_BOARD)
+  {
+    setPNPItem();
+  }
   else
   {
     setXMItem();
@@ -975,7 +1028,7 @@ ModelInfo* getInfo(uint16_t num)
   {
     setXMInfo();
   }
-  else if (num == XH430_V210 || num == XH430_V350 || num == XH430_W210 || num == XH430_W350)
+  else if (num == XH430_V210 || num == XH430_V350 || num == XH430_W210/* || num == XH430_W350*/)
   {
     setXHInfo();
   }
@@ -985,6 +1038,10 @@ ModelInfo* getInfo(uint16_t num)
 //  {
 //    setPROInfo();
 //  }
+  else if (num == PNP_DEVELOPMENT_BOARD)
+  {
+    setPNPInfo();
+  }
   else
   {
     setXMInfo();

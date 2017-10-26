@@ -28,7 +28,7 @@ SOURCES += main.cpp\
     DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp \
     DynamixelWorkbench/src/dynamixel_workbench/dynamixel_item.cpp \
     DynamixelWorkbench/src/dynamixel_workbench/dynamixel_tool.cpp \
-    DynamixelWorkbench/src/dynamixel_workbench/dynamixel_workbench.cpp \
+    DynamixelWorkbench/src/dynamixel_workbench/dynamixel_workbench.cpp
 
 HEADERS  += mainwindow.h \
     DynamixelWorkbench/include/dynamixel_workbench/control_table_item.h \
@@ -36,7 +36,7 @@ HEADERS  += mainwindow.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_item.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_workbench.h \
-    DynamixelWorkbench/src/DynamixelWorkbench.h
+    DynamixelWorkbench/src/DynamixelWorkbench.h \
 
 FORMS    += mainwindow.ui
 

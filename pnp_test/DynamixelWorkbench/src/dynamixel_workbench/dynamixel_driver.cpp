@@ -63,7 +63,7 @@ uint8_t DynamixelDriver::theNumberOfTools()
   return tools_cnt_;
 }
 
-bool DynamixelDriver::begin(char *device_name, uint32_t baud_rate)
+bool DynamixelDriver::begin(const char *device_name, uint32_t baud_rate)
 {
   bool error = false;
 
@@ -74,7 +74,7 @@ bool DynamixelDriver::begin(char *device_name, uint32_t baud_rate)
   return error;
 }
 
-void DynamixelDriver::setPortHandler(char *device_name, bool *error)
+void DynamixelDriver::setPortHandler(const char *device_name, bool *error)
 {
   portHandler_ = dynamixel::PortHandler::getPortHandler(device_name);
 
@@ -613,7 +613,7 @@ bool DynamixelDriver::reset(uint8_t id)
   return true;
 }
 
-bool DynamixelDriver::writeRegister(uint8_t id, char *item_name, int32_t data)
+bool DynamixelDriver::writeRegister(uint8_t id, const char *item_name, int32_t data)
 {
   uint8_t error = 0;
   int dxl_comm_result = COMM_TX_FAIL;
@@ -665,7 +665,7 @@ bool DynamixelDriver::writeRegister(uint8_t id, char *item_name, int32_t data)
   return true;
 }
 
-bool DynamixelDriver::readRegister(uint8_t id, char *item_name, int32_t *data)
+bool DynamixelDriver::readRegister(uint8_t id, const char *item_name, int32_t *data)
 {
   uint8_t error = 0;
   int dxl_comm_result = COMM_RX_FAIL;
@@ -740,6 +740,8 @@ uint8_t DynamixelDriver::findTools(uint8_t id)
       return i;
     }
   }
+
+  return 0;
 }
 
 void DynamixelDriver::addSyncWrite(char *item_name)

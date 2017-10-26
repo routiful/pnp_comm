@@ -61,6 +61,8 @@
 #define PRO_H54_100_S500_R 53768
 #define PRO_H54_200_S500_R 54024
 
+#define PNP_DEVELOPMENT_BOARD 1000
+
 typedef struct
 {
   float velocity_to_value_ratio;
@@ -103,6 +105,9 @@ void setXHInfo();
 
 void setPROItem();
 void setPROInfo();
+
+void setPNPItem();
+void setPNPInfo();
 
 ControlTableItem* getItem(uint16_t num);
 uint8_t getSize();

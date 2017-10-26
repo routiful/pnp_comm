@@ -944,11 +944,13 @@ mainwindow.o: ../pnp_test/mainwindow.cpp ../pnp_test/mainwindow.h \
 		/opt/qt57/include/QtGui/qinputmethod.h \
 		/opt/qt57/include/QtWidgets/QButtonGroup \
 		/opt/qt57/include/QtWidgets/qbuttongroup.h \
+		/opt/qt57/include/QtWidgets/QGroupBox \
+		/opt/qt57/include/QtWidgets/qgroupbox.h \
+		/opt/qt57/include/QtWidgets/qframe.h \
 		/opt/qt57/include/QtWidgets/QHeaderView \
 		/opt/qt57/include/QtWidgets/qheaderview.h \
 		/opt/qt57/include/QtWidgets/qabstractitemview.h \
 		/opt/qt57/include/QtWidgets/qabstractscrollarea.h \
-		/opt/qt57/include/QtWidgets/qframe.h \
 		/opt/qt57/include/QtCore/qabstractitemmodel.h \
 		/opt/qt57/include/QtCore/qitemselectionmodel.h \
 		/opt/qt57/include/QtWidgets/qabstractitemdelegate.h \
@@ -961,14 +963,28 @@ mainwindow.o: ../pnp_test/mainwindow.cpp ../pnp_test/mainwindow.h \
 		/opt/qt57/include/QtWidgets/qstyle.h \
 		/opt/qt57/include/QtWidgets/qtabbar.h \
 		/opt/qt57/include/QtWidgets/qrubberband.h \
+		/opt/qt57/include/QtWidgets/QLabel \
+		/opt/qt57/include/QtWidgets/qlabel.h \
+		/opt/qt57/include/QtWidgets/QLineEdit \
+		/opt/qt57/include/QtWidgets/qlineedit.h \
+		/opt/qt57/include/QtGui/qtextcursor.h \
+		/opt/qt57/include/QtGui/qtextformat.h \
+		/opt/qt57/include/QtGui/qpen.h \
+		/opt/qt57/include/QtGui/qtextoption.h \
 		/opt/qt57/include/QtWidgets/QMenuBar \
 		/opt/qt57/include/QtWidgets/qmenubar.h \
 		/opt/qt57/include/QtWidgets/qmenu.h \
+		/opt/qt57/include/QtWidgets/QPushButton \
+		/opt/qt57/include/QtWidgets/qpushbutton.h \
+		/opt/qt57/include/QtWidgets/qabstractbutton.h \
 		/opt/qt57/include/QtWidgets/QStatusBar \
 		/opt/qt57/include/QtWidgets/qstatusbar.h \
 		/opt/qt57/include/QtWidgets/QToolBar \
 		/opt/qt57/include/QtWidgets/qtoolbar.h \
-		/opt/qt57/include/QtWidgets/QWidget
+		/opt/qt57/include/QtWidgets/QWidget \
+		/opt/qt57/include/QtWidgets/QMessageBox \
+		/opt/qt57/include/QtWidgets/qmessagebox.h \
+		/opt/qt57/include/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../pnp_test/mainwindow.cpp
 
 dynamixel_driver.o: ../pnp_test/DynamixelWorkbench/src/dynamixel_workbench/dynamixel_driver.cpp ../pnp_test/DynamixelWorkbench/include/dynamixel_workbench/dynamixel_driver.h \
