@@ -34,7 +34,7 @@
 #define WORD  2
 #define DWORD 4
 
-#define DEBUG false
+#define DEBUG
 
 typedef struct 
 {
@@ -94,20 +94,20 @@ class DynamixelDriver
   bool writeRegister(uint8_t id, const char *item_name, int32_t data);
   bool readRegister(uint8_t id, const char *item_name, int32_t *data);
 
-  void addSyncWrite(char *item_name);
-  bool syncWrite(char *item_name, int32_t *data);
+  void addSyncWrite(const char *item_name);
+  bool syncWrite(const char *item_name, int32_t *data);
 
   void addSyncRead(char *item_name);
   bool syncRead(char *item_name, int32_t *data);
 
   void initBulkWrite();
-  bool addBulkWriteParam(uint8_t id, char *item_name, int32_t data);
+  bool addBulkWriteParam(uint8_t id, const char *item_name, int32_t data);
   bool bulkWrite();
 
   void initBulkRead();
-  bool addBulkReadParam(uint8_t id, char *item_name);
+  bool addBulkReadParam(uint8_t id, const char *item_name);
   bool sendBulkReadPacket();
-  bool bulkRead(uint8_t id, char *item_name, int32_t *data);
+  bool bulkRead(uint8_t id, const char *item_name, int32_t *data);
 
   int32_t convertRadian2Value(int8_t id, float radian);
   float convertValue2Radian(int8_t id, int32_t value);

@@ -80,11 +80,11 @@ void DynamixelDriver::setPortHandler(const char *device_name, bool *error)
 
   if (portHandler_->openPort())
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Succeeded to open the port!");
 #else
-    printf("\nSucceeded to open the port(%s)!\n", device_name.c_str());
+    printf("\nSucceeded to open the port(%s)!\n", device_name);
 #endif
 #endif
 
@@ -92,7 +92,7 @@ void DynamixelDriver::setPortHandler(const char *device_name, bool *error)
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Failed to open the port!");
 #else
@@ -111,7 +111,7 @@ void DynamixelDriver::setPacketHandler(bool *error)
 
   if (packetHandler_1->getProtocolVersion() == 0)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Failed to setPacketHandler_1!");
 #else
@@ -123,7 +123,7 @@ void DynamixelDriver::setPacketHandler(bool *error)
   }
   else if (packetHandler_2->getProtocolVersion() == 0)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Failed to setPacketHandler_2!");
 #else
@@ -135,11 +135,11 @@ void DynamixelDriver::setPacketHandler(bool *error)
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Succeeded to setPacketHandler_1, setPacketHandler_2!");
 #else
-    printf("Succeeded to setPacketHandler, setPacketHandler_2!\n");
+    printf("Succeeded to setPacketHandler_1, setPacketHandler_2!\n");
 #endif
 #endif
 
@@ -156,7 +156,7 @@ void DynamixelDriver::setBaudrate(uint32_t baud_rate, bool *error)
 {
   if (portHandler_->setBaudRate(baud_rate))
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("Succeeded to change the baudrate!(");
     Serial.print(baud_rate);
@@ -170,7 +170,7 @@ void DynamixelDriver::setBaudrate(uint32_t baud_rate, bool *error)
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Failed to change the baudrate!");
 #else
@@ -208,7 +208,7 @@ uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_versi
 
   tools_cnt_ = 0;
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
   Serial.print("...wait for seconds\n");
 #else
@@ -238,7 +238,7 @@ uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_versi
 
   if (id_cnt == 0)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Can't find Dynamixel");
 #else
@@ -250,7 +250,7 @@ uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_versi
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Succeeded to scan");
     Serial.println("DXL ID : ");
@@ -262,17 +262,17 @@ uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_versi
 
     for (int i = 0; i < theNumberOfTools(); i++)
     {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print(tools_[i].getID());
       Serial.print("  ");
 #else
-      printf("%d  ", id);
+      printf("%d  ", tools_[i].getID());
 #endif   
 #endif 
     }
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("");
 #else
@@ -298,7 +298,7 @@ uint8_t DynamixelDriver::scan(uint8_t *get_id, uint8_t num, float protocol_versi
     }
   }
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
   Serial.println("Scan END");
   Serial.println(" ");
@@ -323,7 +323,7 @@ uint16_t DynamixelDriver::ping(uint8_t id, float protocol_version)
     setTools(model_num, id);
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println("Can't find Dynamixel");
 #else
@@ -333,7 +333,7 @@ uint16_t DynamixelDriver::ping(uint8_t id, float protocol_version)
     return false;
   }
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
   Serial.println("Succeeded to ping!");
   Serial.print("DXL ID : ");
@@ -368,7 +368,7 @@ bool DynamixelDriver::reboot(uint8_t id)
 {
   if (packetHandler_->getProtocolVersion() == 1.0)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("reboot command only can support in protocol version 2.0\n");
 #else
@@ -383,7 +383,7 @@ bool DynamixelDriver::reboot(uint8_t id)
 
     comm_result = packetHandler_->reboot(portHandler_, id, &error);
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("...wait for seconds\n");
     delay(1000);
@@ -397,15 +397,15 @@ bool DynamixelDriver::reboot(uint8_t id)
     {
       if (error != 0)
       {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         Serial.println(packetHandler_->getRxPacketError(error));
 #else
-        printf(packetHandler_->getRxPacketError(error));
+        printf("%s\n", packetHandler_->getRxPacketError(error));
 #endif
 #endif    
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         Serial.print("Failed to reboot!\n");
 #else
@@ -414,12 +414,12 @@ bool DynamixelDriver::reboot(uint8_t id)
 #endif
         return false;
       }
-#if DEBUG
+#ifdef DEBUG
   #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Succeeded to reboot!\n");
 #else
       printf("Succeeded to reboot!\n");
-      printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", id, model_name_, portHandler_->getBaudRate());
+      printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", id, getModelName(id), portHandler_->getBaudRate());
 #endif
 #endif
     }
@@ -427,7 +427,7 @@ bool DynamixelDriver::reboot(uint8_t id)
     {
       packetHandler_->printTxRxResult(comm_result);
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Failed to reboot!\n");
 #else
@@ -452,7 +452,7 @@ bool DynamixelDriver::reset(uint8_t id)
     // Reset Dynamixel except ID and Baudrate
     comm_result = packetHandler_->factoryReset(portHandler_, id, 0x00, &error);
 
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("...wait for seconds\n");
     delay(1000);
@@ -466,15 +466,15 @@ bool DynamixelDriver::reset(uint8_t id)
     {
       if (error != 0)
       {
-#if DEBUG
+#ifdef DEBUG
     #if defined(__OPENCR__) || defined(__OPENCM904__)
         Serial.println(packetHandler_->getRxPacketError(error));
 #else
-        printf(packetHandler_->getRxPacketError(error));
+        printf("%s\n", packetHandler_->getRxPacketError(error));
 #endif
 #endif    
       }
-#if DEBUG
+#ifdef DEBUG
   #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Succeeded to reset!\n");
 #else
@@ -495,7 +495,7 @@ bool DynamixelDriver::reset(uint8_t id)
 
       if (portHandler_->setBaudRate(baud) == false)
       {
-#if DEBUG
+#ifdef DEBUG
     #if defined(__OPENCR__) || defined(__OPENCM904__)
         delay(1000);
         Serial.print("Failed to change baudrate!\n");
@@ -509,14 +509,14 @@ bool DynamixelDriver::reset(uint8_t id)
       }
       else
       {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         delay(1000);
         Serial.print("Succeeded to change baudrate!\n");
 #else
         sleep(1);
         printf("Succeeded to change baudrate!\n");
-        printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", 1, model_name_, portHandler_->getBaudRate());
+        printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", 1, getModelName(id), portHandler_->getBaudRate());
 #endif
 #endif
       }
@@ -524,7 +524,7 @@ bool DynamixelDriver::reset(uint8_t id)
     else
     {
       packetHandler_->printTxRxResult(comm_result);
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Failed to reset!\n");
 #else
@@ -538,7 +538,7 @@ bool DynamixelDriver::reset(uint8_t id)
   else if (packetHandler_->getProtocolVersion() == 2.0)
   {
     comm_result = packetHandler_->factoryReset(portHandler_, id, 0xff, &error);
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("...wait for seconds\n");
     delay(1000);
@@ -552,15 +552,15 @@ bool DynamixelDriver::reset(uint8_t id)
     {
       if (error != 0)
       {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         Serial.println(packetHandler_->getRxPacketError(error));
 #else
-        printf(packetHandler_->getRxPacketError(error));
+        printf("%s\n", packetHandler_->getRxPacketError(error));
 #endif
 #endif    
       }
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Succeeded to reset!\n");
 #else
@@ -570,7 +570,7 @@ bool DynamixelDriver::reset(uint8_t id)
 
       if (portHandler_->setBaudRate(57600) == false)
       {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         delay(1000);
         Serial.print("Failed to change baudrate!\n");
@@ -584,14 +584,14 @@ bool DynamixelDriver::reset(uint8_t id)
       }
       else
       {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
         delay(1000);
         Serial.print("Succeeded to change baudrate!\n");
 #else
         sleep(1);
         printf("Succeeded to change baudrate!\n");
-        printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", 1, model_name_, portHandler_->getBaudRate());
+        printf("[ID] %u, [Model Name] %s, [BAUD RATE] %d\n", 1, getModelName(id), portHandler_->getBaudRate());
 #endif
 #endif
       }
@@ -599,7 +599,7 @@ bool DynamixelDriver::reset(uint8_t id)
     else
     {
       packetHandler_->printTxRxResult(comm_result);
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("Failed to reset!\n");
 #else
@@ -638,11 +638,11 @@ bool DynamixelDriver::writeRegister(uint8_t id, const char *item_name, int32_t d
   {
     if (error != 0)
     {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.println(packetHandler_->getRxPacketError(error));
 #else
-      printf(packetHandler_->getRxPacketError(error));
+      printf("%s\n", packetHandler_->getRxPacketError(error));
 #endif
 #endif    
 
@@ -651,11 +651,11 @@ bool DynamixelDriver::writeRegister(uint8_t id, const char *item_name, int32_t d
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
 
@@ -694,11 +694,11 @@ bool DynamixelDriver::readRegister(uint8_t id, const char *item_name, int32_t *d
   {
     if (error != 0)
     {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print(packetHandler_->getRxPacketError(error));
 #else
-      printf(packetHandler_->getRxPacketError(error));
+      printf("%s\n", packetHandler_->getRxPacketError(error));
 #endif
 #endif
     }
@@ -718,11 +718,11 @@ bool DynamixelDriver::readRegister(uint8_t id, const char *item_name, int32_t *d
   }
   else
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
     return false;
@@ -744,7 +744,7 @@ uint8_t DynamixelDriver::findTools(uint8_t id)
   return 0;
 }
 
-void DynamixelDriver::addSyncWrite(char *item_name)
+void DynamixelDriver::addSyncWrite(const char *item_name)
 {
   ControlTableItem *cti;
   cti = tools_[0].getControlItem(item_name);
@@ -759,7 +759,7 @@ void DynamixelDriver::addSyncWrite(char *item_name)
   sync_write_handler_cnt_++;
 }
 
-bool DynamixelDriver::syncWrite(char *item_name, int32_t *data)
+bool DynamixelDriver::syncWrite(const char *item_name, int32_t *data)
 {
   bool dxl_addparam_result = false;
   int dxl_comm_result = COMM_TX_FAIL;
@@ -789,7 +789,7 @@ bool DynamixelDriver::syncWrite(char *item_name, int32_t *data)
     dxl_addparam_result = swh.groupSyncWrite->addParam(tools_[num].getID(), (uint8_t *)&data_byte);
     if (dxl_addparam_result != true)
     {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
       Serial.print("groupSyncWrite addparam failed\n");
 #else
@@ -803,11 +803,11 @@ bool DynamixelDriver::syncWrite(char *item_name, int32_t *data)
   dxl_comm_result = swh.groupSyncWrite->txPacket();
   if (dxl_comm_result != COMM_SUCCESS)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
     return false;
@@ -860,11 +860,11 @@ bool DynamixelDriver::syncRead(char *item_name, int32_t *data)
   dxl_comm_result = srh.groupSyncRead->txRxPacket();
   if (dxl_comm_result != COMM_SUCCESS)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
     return false;
@@ -896,7 +896,7 @@ void DynamixelDriver::initBulkWrite()
   groupBulkWrite_ = new dynamixel::GroupBulkWrite(portHandler_, packetHandler_);
 }
 
-bool DynamixelDriver::addBulkWriteParam(uint8_t id, char *item_name, int32_t data)
+bool DynamixelDriver::addBulkWriteParam(uint8_t id, const char *item_name, int32_t data)
 {
   bool dxl_addparam_result = false;
   uint8_t data_byte[4] = {0, };
@@ -912,7 +912,7 @@ bool DynamixelDriver::addBulkWriteParam(uint8_t id, char *item_name, int32_t dat
   dxl_addparam_result = groupBulkWrite_->addParam(id, cti->address, cti->data_length, data_byte);
   if (dxl_addparam_result != true)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("groupSyncWrite addparam failed\n");
 #else
@@ -932,11 +932,11 @@ bool DynamixelDriver::bulkWrite()
   dxl_comm_result = groupBulkWrite_->txPacket();
   if (dxl_comm_result != COMM_SUCCESS)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
 
@@ -953,7 +953,7 @@ void DynamixelDriver::initBulkRead()
   groupBulkRead_ = new dynamixel::GroupBulkRead(portHandler_, packetHandler_);
 }
 
-bool DynamixelDriver::addBulkReadParam(uint8_t id, char *item_name)
+bool DynamixelDriver::addBulkReadParam(uint8_t id, const char *item_name)
 {
   bool dxl_addparam_result = false;
 
@@ -963,11 +963,11 @@ bool DynamixelDriver::addBulkReadParam(uint8_t id, char *item_name)
   dxl_addparam_result = groupBulkRead_->addParam(id, cti->address, cti->data_length);
   if (dxl_addparam_result != true)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("groupBulkRead addparam failed\n");
 #else
-    printf("[ID:%03d] groupBulkRead addparam failed", id);
+    printf("[ID:%03d] groupBulkRead addparam failed\n", id);
 #endif
 #endif
 
@@ -984,11 +984,11 @@ bool DynamixelDriver::sendBulkReadPacket()
   dxl_comm_result = groupBulkRead_->txRxPacket();
   if (dxl_comm_result != COMM_SUCCESS)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.println(packetHandler_->getTxRxResult(dxl_comm_result));
 #else
-    printf("%s\n", packetHandler->getTxRxResult(dxl_comm_result));
+    printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
 #endif
 #endif
 
@@ -998,7 +998,7 @@ bool DynamixelDriver::sendBulkReadPacket()
   return true;
 }
 
-bool DynamixelDriver::bulkRead(uint8_t id, char *item_name, int32_t *data)
+bool DynamixelDriver::bulkRead(uint8_t id, const char *item_name, int32_t *data)
 {
   bool dxl_getdata_result = false;
   ControlTableItem *cti;
@@ -1007,11 +1007,11 @@ bool DynamixelDriver::bulkRead(uint8_t id, char *item_name, int32_t *data)
   dxl_getdata_result = groupBulkRead_->isAvailable(id, cti->address, cti->data_length);
   if (dxl_getdata_result != true)
   {
-#if DEBUG
+#ifdef DEBUG
 #if defined(__OPENCR__) || defined(__OPENCM904__)
     Serial.print("groupBulkRead getdata failed\n");
 #else
-    fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", id);
+    fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed  ", id);
 #endif
 #endif
 
