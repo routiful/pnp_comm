@@ -215,52 +215,55 @@ void MainWindow::updateData()
   int32_t dxl_1_present_velocity = 0, dxl_2_present_veloticy = 0;
   int32_t *imu_data, *temp_data, *color_data, *adc_data;
 
-  if (get_id_[0] == DXL_1)
+  for (int index = 0; index < tools_cnt_; index++)
   {
-    dxl_1_present_position = readPosition(DXL_1);
-    dxl_1_present_velocity = readVelocity(DXL_1);
+    if (get_id_[index] == DXL_1)
+    {
+      dxl_1_present_position = readPosition(DXL_1);
+      dxl_1_present_velocity = readVelocity(DXL_1);
 
-    showData(std::string("< DYNAMIXEL 1 >"));
-    showData(std::string("present_position  : "), dxl_1_present_position);
-    showData(std::string("present_velocity  : "), dxl_1_present_velocity);
-    showData(std::string(" "));
-  }
+      showData(std::string("< DYNAMIXEL 1 >"));
+      showData(std::string("present_position  : "), dxl_1_present_position);
+      showData(std::string("present_velocity  : "), dxl_1_present_velocity);
+      showData(std::string(" "));
+    }
 
-  if (get_id_[1] == DXL_2)
-  {
-    dxl_2_present_position = readPosition(DXL_2);
-    dxl_2_present_veloticy = readVelocity(DXL_2);
+    if (get_id_[index] == DXL_2)
+    {
+      dxl_2_present_position = readPosition(DXL_2);
+      dxl_2_present_veloticy = readVelocity(DXL_2);
 
-    showData(std::string("< DYNAMIXEL 2 >"));
-    showData(std::string("present_position  : "), dxl_2_present_position);
-    showData(std::string("present_velocity  : "), dxl_2_present_veloticy);
-    showData(std::string(" "));
-  }
+      showData(std::string("< DYNAMIXEL 2 >"));
+      showData(std::string("present_position  : "), dxl_2_present_position);
+      showData(std::string("present_velocity  : "), dxl_2_present_veloticy);
+      showData(std::string(" "));
+    }
 
-  if (get_id_[2] == SENSOR)
-  {
-    imu_data   = readIMU(SENSOR);
-    temp_data  = readTemp(SENSOR);
-    color_data = readColor(SENSOR);
-    adc_data   = readADC(SENSOR);
+    if (get_id_[index] == SENSOR)
+    {
+      imu_data   = readIMU(SENSOR);
+      temp_data  = readTemp(SENSOR);
+      color_data = readColor(SENSOR);
+      adc_data   = readADC(SENSOR);
 
-    showData(std::string("< PNP DEV BOARD >"));
-    showData(std::string("imu_data[Roll]    : "), imu_data[0]);
-    showData(std::string("imu_data[Pitch]   : "), imu_data[1]);
-    showData(std::string("imu_data[Yaw]     : "), imu_data[2]);
-    showData(std::string(" "));
+      showData(std::string("< PNP DEV BOARD >"));
+      showData(std::string("imu_data[Roll]    : "), imu_data[0]);
+      showData(std::string("imu_data[Pitch]   : "), imu_data[1]);
+      showData(std::string("imu_data[Yaw]     : "), imu_data[2]);
+      showData(std::string(" "));
 
-    showData(std::string("temp_data         : "), temp_data[0]);
-    showData(std::string(" "));
+      showData(std::string("temp_data         : "), temp_data[0]);
+      showData(std::string(" "));
 
-    showData(std::string("color_data[RED]   : "), color_data[0]);
-    showData(std::string("color_data[GREEN] : "), color_data[1]);
-    showData(std::string("color_data[BLUE]  : "), color_data[2]);
-    showData(std::string(" "));
+      showData(std::string("color_data[RED]   : "), color_data[0]);
+      showData(std::string("color_data[GREEN] : "), color_data[1]);
+      showData(std::string("color_data[BLUE]  : "), color_data[2]);
+      showData(std::string(" "));
 
-    showData(std::string("adc_data[ch 1]    : "), adc_data[0]);
-    showData(std::string("adc_data[ch 2]    : "), adc_data[2]);
-    showData(std::string(" "));
+      showData(std::string("adc_data[ch 1]    : "), adc_data[0]);
+      showData(std::string("adc_data[ch 2]    : "), adc_data[2]);
+      showData(std::string(" "));
+    }
   }
 
   ui->pnp_listView->setModel(&logging_model_);
@@ -803,7 +806,7 @@ void MainWindow::on_radioButton_57600_clicked()
   int32_t baud = 57600;
   get_baud_rate_ = 0;
 
-  for (int index = 0; index <= tools_cnt_; index++)
+  for (int index = 0; index < tools_cnt_; index++)
   {
     if (get_id_[index] < 100)
       torque(get_id_[index], false);
@@ -826,7 +829,7 @@ void MainWindow::on_radioButton_115200_clicked()
   int32_t baud = 115200;
   get_baud_rate_ = 1;
 
-  for (int index = 0; index <= tools_cnt_; index++)
+  for (int index = 0; index < tools_cnt_; index++)
   {
     if (get_id_[index] < 100)
       torque(get_id_[index], false);
@@ -849,7 +852,7 @@ void MainWindow::on_radioButton_1000000_clicked()
   int32_t baud = 1000000;
   get_baud_rate_ = 2;
 
-  for (int index = 0; index <= tools_cnt_; index++)
+  for (int index = 0; index < tools_cnt_; index++)
   {
     if (get_id_[index] < 100)
       torque(get_id_[index], false);
@@ -872,7 +875,7 @@ void MainWindow::on_radioButton_2000000_clicked()
   int32_t baud = 2000000;
   get_baud_rate_ = 3;
 
-  for (int index = 0; index <= tools_cnt_; index++)
+  for (int index = 0; index < tools_cnt_; index++)
   {
     if (get_id_[index] < 100)
       torque(get_id_[index], false);
@@ -895,7 +898,7 @@ void MainWindow::on_radioButton_3000000_clicked()
   int32_t baud = 3000000;
   get_baud_rate_ = 4;
 
-  for (int index = 0; index <= tools_cnt_; index++)
+  for (int index = 0; index < tools_cnt_; index++)
   {
     if (get_id_[index] < 100)
       torque(get_id_[index], false);
