@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
-    <height>780</height>
+    <width>710</width>
+    <height>814</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,29 +20,29 @@
       <x>10</x>
       <y>10</y>
       <width>691</width>
-      <height>651</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>13</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="title">
-     <string>Dynamixel</string>
+     <string>TEST ENVIRONENT</string>
     </property>
     <widget class="QGroupBox" name="baudrate_groupbox">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>15</x>
        <y>30</y>
        <width>661</width>
-       <height>201</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>13</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="title">
@@ -52,7 +52,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>150</y>
+        <y>100</y>
         <width>100</width>
         <height>20</height>
        </rect>
@@ -71,7 +71,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>150</y>
+        <y>100</y>
         <width>100</width>
         <height>20</height>
        </rect>
@@ -87,7 +87,7 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>150</y>
+        <y>100</y>
         <width>100</width>
         <height>20</height>
        </rect>
@@ -103,7 +103,7 @@
       <property name="geometry">
        <rect>
         <x>410</x>
-        <y>150</y>
+        <y>100</y>
         <width>100</width>
         <height>20</height>
        </rect>
@@ -116,7 +116,7 @@
       <property name="geometry">
        <rect>
         <x>550</x>
-        <y>150</y>
+        <y>100</y>
         <width>100</width>
         <height>20</height>
        </rect>
@@ -133,166 +133,96 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>641</width>
-        <height>91</height>
+        <width>321</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="text">
        <string>Connect</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="close_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>30</y>
+        <width>311</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Close</string>
       </property>
      </widget>
     </widget>
     <widget class="QGroupBox" name="command_groupbox">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>310</y>
+       <x>15</x>
+       <y>210</y>
        <width>661</width>
-       <height>141</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>13</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="title">
       <string>Command</string>
      </property>
-     <widget class="QPushButton" name="read_write_button">
+     <widget class="QPushButton" name="single_read_write_button">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
-        <width>311</width>
-        <height>101</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="bulk_read_write_button">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>30</y>
-        <width>311</width>
-        <height>101</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="id_1_groupbox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>470</y>
-       <width>321</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>ID 1 </string>
-     </property>
-     <widget class="QLineEdit" name="id_1_position_lineedit">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>30</y>
-        <width>211</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Position</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="id_2_groupbox">
-     <property name="geometry">
-      <rect>
-       <x>340</x>
-       <y>470</y>
-       <width>331</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>ID 2 </string>
-     </property>
-     <widget class="QLineEdit" name="id_2_position_lineedit">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
         <y>30</y>
         <width>201</width>
-        <height>31</height>
+        <height>41</height>
        </rect>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>13</pointsize>
-       </font>
       </property>
       <property name="text">
-       <string>Position</string>
+       <string/>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="multi_read_write_button">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>30</y>
+        <width>201</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="all_tools_read_button">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>30</y>
+        <width>221</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -300,32 +230,59 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>170</y>
        <width>661</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="value">
       <number>0</number>
      </property>
+     <property name="textVisible">
+      <bool>false</bool>
+     </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="close_pushButton">
+   <widget class="QListView" name="pnp_listView">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>670</y>
-      <width>691</width>
-      <height>61</height>
+      <y>320</y>
+      <width>201</width>
+      <height>431</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
-    <property name="text">
-     <string>CLOSE</string>
+    <property name="dragEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QListView" name="log_listView">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>320</y>
+      <width>471</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="dragEnabled">
+     <bool>true</bool>
+    </property>
+    <property name="dragDropOverwriteMode">
+     <bool>true</bool>
+    </property>
+    <property name="dragDropMode">
+     <enum>QAbstractItemView::DragOnly</enum>
     </property>
    </widget>
   </widget>
@@ -334,7 +291,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>715</width>
+     <width>710</width>
      <height>19</height>
     </rect>
    </property>

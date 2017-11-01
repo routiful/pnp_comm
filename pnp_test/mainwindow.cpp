@@ -1,14 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "QMessageBox"
-#include "QTime"
-
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);  // Do not delete this
+  qtimer_ = new QTimer;
+  file_   = new QFile;
+
+  QString filename = QTime::currentTime().toString() + QString(" COMMUNICATION TEST(ROBOTIS)");
+  file_->setFileName(filename);
+  file_->open(QIODevice::WriteOnly);
 
   baud_rate_[0] = 57600;
   baud_rate_[1] = 115200;
@@ -16,8 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
   baud_rate_[3] = 2000000;
   baud_rate_[4] = 3000000;
 
-  ui->read_write_button->setText("Single Read/Write");
-  ui->bulk_read_write_button->setText("Multi Read/Write");
+  ui->single_read_write_button->setText("Single Read/Write");
+  ui->multi_read_write_button->setText("Multi Read/Write");
+  ui->all_tools_read_button->setText("All tools Read");
 
   ui->radioButton_57600->setDisabled(true);
   ui->radioButton_115200->setDisabled(true);
@@ -26,13 +30,19 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->radioButton_3000000->setDisabled(true);
 
   if (openPort(DEVICE_NAME) == false)
+  {
+    QMessageBox::about(this, tr("ERROR"),tr("<h2>CONNECTION</h2><p>Can't open port!!</p>"));
     this->~MainWindow();
+  }
 
   if (setProtocolVersion(2.0) == false)
+  {
+    QMessageBox::about(this, tr("ERROR"),tr("<h2>CONNECTION</h2><p>Can't set packetHandler!!</p>"));
     this->~MainWindow();
+  }
 
-  initBulkRead();
-  initBulkWrite();
+  initSyncWrite();
+  initSyncRead();
 }
 
 MainWindow::~MainWindow()
@@ -92,108 +102,236 @@ bool MainWindow::setBaudrate(uint32_t baud)
   }
 }
 
-void MainWindow::initBulkWrite()
+void MainWindow::initSyncWrite()
 {
-  groupBulkWrite_ = new dynamixel::GroupBulkWrite(portHandler_, packetHandler_);
+  dxlSyncWrite_ = new dynamixel::GroupSyncWrite(portHandler_,
+                                                packetHandler_,
+                                                ADDR_DYNAMIXEL_GOAL_POSITION,
+                                                LEN_DYNAMIXEL_GOAL_POSITION);
 }
 
-bool MainWindow::addBulkWriteParam(uint8_t id, const char *item_name, int32_t data)
+output_info MainWindow::syncWrite(uint8_t tool_num, int32_t* data)
 {
   bool dxl_addparam_result = false;
+  int dxl_comm_result = COMM_TX_FAIL;
+  output_info info = {false, 0};
   uint8_t data_byte[4] = {0, };
+  uint8_t cnt = tool_num;
+  static uint32_t t_time = 0;
 
-  ControlTableItem *cti;
-  cti = tools_[findTools(id)].getControlItem(item_name);
-
-  data_byte[0] = DXL_LOBYTE(DXL_LOWORD(data));
-  data_byte[1] = DXL_HIBYTE(DXL_LOWORD(data));
-  data_byte[2] = DXL_LOBYTE(DXL_HIWORD(data));
-  data_byte[3] = DXL_HIBYTE(DXL_HIWORD(data));
-
-  dxl_addparam_result = groupBulkWrite_->addParam(id, cti->address, cti->data_length, data_byte);
-  if (dxl_addparam_result != true)
+  for (int num = 0; num < cnt; ++num)
   {
-    printf("[ID:%03d] groupSyncWrite addparam failed", id);
-    return false;
+    data_byte[0] = DXL_LOBYTE(DXL_LOWORD(data[num]));
+    data_byte[1] = DXL_HIBYTE(DXL_LOWORD(data[num]));
+    data_byte[2] = DXL_LOBYTE(DXL_HIWORD(data[num]));
+    data_byte[3] = DXL_HIBYTE(DXL_HIWORD(data[num]));
+
+    dxl_addparam_result = dxlSyncWrite_->addParam(tools_[num].getID(), (uint8_t *)&data_byte);
+    if (dxl_addparam_result != true)
+    {
+      printf("[ID:%03d] groupSyncWrite addparam failed", tools_[num].getID());
+
+      info.error = true;
+    }
   }
 
-  return true;
-}
+  t_time = micros();
+  dxl_comm_result = dxlSyncWrite_->txPacket();
+  info.time = micros() - t_time;
 
-bool MainWindow::bulkWrite()
-{
-  int dxl_comm_result = COMM_TX_FAIL;
-
-  dxl_comm_result = groupBulkWrite_->txPacket();
   if (dxl_comm_result != COMM_SUCCESS)
   {
     printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
-    return false;
+    info.error = true;
   }
+  dxlSyncWrite_->clearParam();
 
-  groupBulkWrite_->clearParam();
-
-  return true;
+  return info;
 }
 
-void MainWindow::initBulkRead()
+void MainWindow::initSyncRead()
 {
-  groupBulkRead_ = new dynamixel::GroupBulkRead(portHandler_, packetHandler_);
+  dxlSyncRead_ = new dynamixel::GroupSyncRead(portHandler_,
+                                              packetHandler_,
+                                              ADDR_DYNAMIXEL_PRESENT_POSITION,
+                                              LEN_DYNAMIXEL_PRESENT_POSITION);
+
+  allToolsSyncRead_ = new dynamixel::GroupSyncRead(portHandler_,
+                                                   packetHandler_,
+                                                   ADDR_DYNAMIXEL_GOAL_POSITION,
+                                                   LEN_DYNAMIXEL_GOAL_POSITION);
 }
 
-bool MainWindow::addBulkReadParam(uint8_t id, const char *item_name)
-{
-  bool dxl_addparam_result = false;
-
-  ControlTableItem *cti;
-  cti = tools_[findTools(id)].getControlItem(item_name);
-
-  dxl_addparam_result = groupBulkRead_->addParam(id, cti->address, cti->data_length);
-  if (dxl_addparam_result != true)
-  {
-    printf("[ID:%03d] groupBulkRead addparam failed\n", id);
-    return false;
-  }
-
-  return true;
-}
-
-bool MainWindow::sendBulkReadPacket()
+output_info MainWindow::syncRead(uint8_t tools_num, uint16_t address, uint8_t data_length, int32_t *data)
 {
   int dxl_comm_result = COMM_RX_FAIL;
+  bool dxl_addparam_result = false;
+  bool dxl_getdata_result = false;
+  output_info info = {false, 0};
+  uint8_t cnt = tools_num;
+  static uint32_t t_time = 0;
 
-  dxl_comm_result = groupBulkRead_->txRxPacket();
+  for (int num = 0; num < cnt; num++)
+  {
+    dxl_addparam_result = dxlSyncRead_->addParam(tools_[num].getID());
+    if (dxl_addparam_result != true)
+      info.error = true;
+  }
+
+  t_time = micros();
+  dxl_comm_result = dxlSyncRead_->txRxPacket();
+  info.time = micros() - t_time;
+
   if (dxl_comm_result != COMM_SUCCESS)
   {
     printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
-    return false;
+    info.error = true;
   }
 
-  return true;
+  for (int num = 0; num < cnt; ++num)
+  {
+    uint8_t id = tools_[num].getID();
+
+    dxl_getdata_result = dxlSyncRead_->isAvailable(id, address, data_length);
+
+    if (dxl_getdata_result)
+    {
+      data[num] = dxlSyncRead_->getData(id, address, data_length);
+    }
+    else
+    {
+      info.error = true;
+    }
+  }
+
+  dxlSyncRead_->clearParam();
+
+  return info;
 }
 
-int32_t MainWindow::bulkRead(uint8_t id, const char *item_name)
+void MainWindow::updateData()
 {
-  bool dxl_getdata_result = false;
-  ControlTableItem *cti;
-  cti = tools_[findTools(id)].getControlItem(item_name);
+  int32_t dxl_1_present_position = 0, dxl_2_present_position = 0;
+  int32_t dxl_1_present_velocity = 0, dxl_2_present_veloticy = 0;
+  int32_t *imu_data, *temp_data, *color_data, *adc_data;
 
-  dxl_getdata_result = groupBulkRead_->isAvailable(id, cti->address, cti->data_length);
-  if (dxl_getdata_result != true)
+  if (get_id_[0] == DXL_1)
   {
-    printf("[ID:%03d] groupBulkRead getdata failed\n", id);
-    return false;
+    dxl_1_present_position = readPosition(DXL_1);
+    dxl_1_present_velocity = readVelocity(DXL_1);
+
+    showData(std::string("< DYNAMIXEL 1 >"));
+    showData(std::string("present_position  : "), dxl_1_present_position);
+    showData(std::string("present_velocity  : "), dxl_1_present_velocity);
+    showData(std::string(" "));
   }
 
-  return groupBulkRead_->getData(id, cti->address, cti->data_length);
+  if (get_id_[1] == DXL_2)
+  {
+    dxl_2_present_position = readPosition(DXL_2);
+    dxl_2_present_veloticy = readVelocity(DXL_2);
+
+    showData(std::string("< DYNAMIXEL 2 >"));
+    showData(std::string("present_position  : "), dxl_2_present_position);
+    showData(std::string("present_velocity  : "), dxl_2_present_veloticy);
+    showData(std::string(" "));
+  }
+
+  if (get_id_[2] == SENSOR)
+  {
+    imu_data   = readIMU(SENSOR);
+    temp_data  = readTemp(SENSOR);
+    color_data = readColor(SENSOR);
+    adc_data   = readADC(SENSOR);
+
+    showData(std::string("< PNP DEV BOARD >"));
+    showData(std::string("imu_data[Roll]    : "), imu_data[0]);
+    showData(std::string("imu_data[Pitch]   : "), imu_data[1]);
+    showData(std::string("imu_data[Yaw]     : "), imu_data[2]);
+    showData(std::string(" "));
+
+    showData(std::string("temp_data         : "), temp_data[0]);
+    showData(std::string(" "));
+
+    showData(std::string("color_data[RED]   : "), color_data[0]);
+    showData(std::string("color_data[GREEN] : "), color_data[1]);
+    showData(std::string("color_data[BLUE]  : "), color_data[2]);
+    showData(std::string(" "));
+
+    showData(std::string("adc_data[ch 1]    : "), adc_data[0]);
+    showData(std::string("adc_data[ch 2]    : "), adc_data[2]);
+    showData(std::string(" "));
+  }
+
+  ui->pnp_listView->setModel(&logging_model_);
+
+  row_count_ = 0;
+
+}
+
+void MainWindow::showData(const std::string &msg, int64_t value)
+{
+    if(logging_model_.rowCount() == row_count_)
+        logging_model_.insertRows(row_count_, 1);
+
+    std::stringstream logging_model_msg;
+
+    logging_model_msg << msg << value;
+
+    QVariant new_row(QString(logging_model_msg.str().c_str()));
+    logging_model_.setData(logging_model_.index(row_count_), new_row);
+
+    row_count_++;
+}
+
+void MainWindow::showData(const std::string &msg)
+{
+    if(logging_model_.rowCount() == row_count_)
+        logging_model_.insertRows(row_count_, 1);
+
+    std::stringstream logging_model_msg;
+
+    logging_model_msg << msg;
+
+    QVariant new_row(QString(logging_model_msg.str().c_str()));
+    logging_model_.setData(logging_model_.index(row_count_), new_row);
+
+    row_count_++;
+}
+
+void MainWindow::log(const std::string &msg, int64_t value)
+{
+    time_logging_model_.insertRows(time_logging_model_.rowCount(), 1);
+
+    std::stringstream logging_model_msg;
+
+    logging_model_msg << msg << value;
+
+    QVariant new_row(QString(logging_model_msg.str().c_str()));
+    time_logging_model_.setData(time_logging_model_.index(time_logging_model_.rowCount()-1), new_row);
+}
+
+void MainWindow::log(const std::string &msg)
+{
+    time_logging_model_.insertRows(time_logging_model_.rowCount(), 1);
+
+    std::stringstream logging_model_msg;
+
+    logging_model_msg << msg;
+
+    QVariant new_row(QString(logging_model_msg.str().c_str()));
+    time_logging_model_.setData(time_logging_model_.index(time_logging_model_.rowCount()-1), new_row);
 }
 
 void MainWindow::on_connect_pushButton_clicked()
-{ 
+{
   uint8_t error = 0;
   uint8_t id = 0;
   uint16_t model_num = 0;
   uint8_t baud_rate_index = 0;
+
+  tools_cnt_ = 0;
+  qtimer_->stop();
 
   while (baud_rate_index < BAUDRATE_NUM)
   {
@@ -219,27 +357,14 @@ void MainWindow::on_connect_pushButton_clicked()
     baud_rate_index++;
   }
 
+  get_baud_rate_ = baud_rate_index;
+
   if (tools_cnt_ != 0)
   {
-    QMessageBox::about(this, tr("INFO"),tr("<h2>DYNAMIXEL</h2><p>Initialization Succeed!!</p>"));
+    QString qstr;
+    qstr = QString("<h2>CONNECTION</h2><p> <strong>ID : %1 %2 %3</strong> <br /> Initialization Success</p>").arg(get_id_[0]).arg(get_id_[1]).arg(get_id_[2]);
 
-    for (int index = 0; index < tools_cnt_; index++)
-    {
-      int32_t present_position = 0;
-
-      present_position = readPosition(get_id_[index]);
-
-      float rad = convertValue2Radian(get_id_[index], present_position);
-
-      if (index == 0)
-      {
-        ui->id_1_position_lineedit->setText(QString::number(RAD2DEG(rad)));;
-      }
-      else if (index == 1)
-      {
-        ui->id_2_position_lineedit->setText(QString::number(RAD2DEG(rad)));
-      }
-    }
+    QMessageBox::about(this, tr("INFO"), qstr);
 
     ui->radioButton_57600->setDisabled(false);
     ui->radioButton_115200->setDisabled(false);
@@ -259,6 +384,9 @@ void MainWindow::on_connect_pushButton_clicked()
       ui->radioButton_3000000->setChecked(true);
 
     ui->connect_pushButton->setDisabled(true);
+
+    connect(qtimer_, SIGNAL(timeout()), this, SLOT(updateData()));
+    qtimer_->start(TIMER_MILLIS);
   }
   else
   {
@@ -266,85 +394,118 @@ void MainWindow::on_connect_pushButton_clicked()
   }
 }
 
-void MainWindow::on_read_write_button_clicked()
+void MainWindow::writeLine(QString qstr)
 {
-  jointMode(get_id_[0], 200, 50);
+  QString line = qstr;
 
+  QByteArray str;
+  str.append(line);
+
+  file_->write(str);
+}
+
+void MainWindow::on_single_read_write_button_clicked()
+{
+  output_info sync_write_info = {false, 0};
+  output_info sync_read_info = {false, 0};
   static int index = 0;
-  int32_t present_position = 0;
+  int32_t read_present_position = 0;
   float goal_degree[2] = {90.0, -90.0};
+  int32_t send_goal_position = 0;
+
+  QString first_line = QString("SINGLE DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
+  writeLine(first_line);
+
+  jointMode(get_id_[0], 200, 50);
 
   QTime t;
   t.start();
 
-  while (t.elapsed() < 5 * 1000) // 5 seconds
+  log(std::string("SINGLE DYNAMIXEL 4 BYTE, BAUD_RATE : "), baud_rate_[get_baud_rate_]);
+
+  while (t.elapsed() < 1 * 1000) // 5 seconds
   {
-    uint16_t goal_position = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree[index]));
-    goalPosition(get_id_[0], goal_degree[index]);
+    send_goal_position = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree[index]));
+
+    sync_write_info = syncWrite(1, &send_goal_position);
 
     do
     {
-      present_position = readPosition(get_id_[0]);
+      sync_read_info = syncRead(1, ADDR_DYNAMIXEL_PRESENT_POSITION, LEN_DYNAMIXEL_PRESENT_POSITION, &read_present_position);
 
-      float rad = convertValue2Radian(get_id_[0], present_position);
-
-      ui->id_1_position_lineedit->setText(QString::number(RAD2DEG(rad)));
-
-    }while(abs(goal_position - present_position) > 5);
+    }while((abs(send_goal_position - read_present_position) > 5));
 
     if (index == 0)
       index = 1;
     else
       index = 0;
   }
+
+  log(std::string("WRITE TIME : "), sync_write_info.time);
+  log(std::string("READ TIME : "), sync_read_info.time);
+
+  log(std::string(" "));
+  ui->log_listView->setModel(&time_logging_model_);
+
+  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
+  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
+
+  writeLine(write_data);
+  writeLine(read_data);
 
   torque(get_id_[0], false);
 }
 
-void MainWindow::on_bulk_read_write_button_clicked()
+void MainWindow::on_multi_read_write_button_clicked()
 {
+  output_info sync_write_info = {false, 0};
+  output_info sync_read_info = {false, 0};
+  static int index = 0;
+  int32_t read_present_position[2] = {0, 0};
+  float goal_degree[2] = {90.0, -90.0};
+  int32_t send_goal_position[2] = {0, 0};
+
+  QString first_line = QString("MULTI DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
+  writeLine(first_line);
+
   jointMode(get_id_[0], 200, 50);
   jointMode(get_id_[1], 200, 50);
-
-  static int index = 0;
-  int32_t present_position[2] = {0, 0};
-  float goal_degree[2] = {90.0, -90.0};
-  float rad = 0.0;
-
-  addBulkReadParam(get_id_[0], "Present Position");
-  addBulkReadParam(get_id_[1], "Present Position");
 
   QTime t;
   t.start();
 
-  while (t.elapsed() < 5 * 1000) // 5 seconds
-  {
-    uint16_t goal_position = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree[index]));
-    addBulkWriteParam(get_id_[0], "Goal Position", goal_position);
-    addBulkWriteParam(get_id_[1], "Goal Position", goal_position);
+  log(std::string("MULTI DYNAMIXEL 4 BYTE, BAUD_RATE : "), baud_rate_[get_baud_rate_]);
 
-    bulkWrite();
+  while (t.elapsed() < 1 * 1000) // 5 seconds
+  {
+    send_goal_position[0] = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree[index]));
+    send_goal_position[1] = convertRadian2Value(get_id_[1], DEG2RAD(goal_degree[index]));
+
+    sync_write_info = syncWrite(2, &send_goal_position[0]);
 
     do
     {
-      sendBulkReadPacket();
+      sync_read_info = syncRead(2, ADDR_DYNAMIXEL_PRESENT_POSITION, LEN_DYNAMIXEL_PRESENT_POSITION, &read_present_position[0]);
 
-      present_position[0] = bulkRead(get_id_[0], "Present Position");
-      present_position[1] = bulkRead(get_id_[1], "Present Position");
-
-      rad = convertValue2Radian(get_id_[index], present_position[0]);
-      ui->id_1_position_lineedit->setText(QString::number(RAD2DEG(rad)));
-
-      rad = convertValue2Radian(get_id_[index], present_position[1]);
-      ui->id_2_position_lineedit->setText(QString::number(RAD2DEG(rad)));
-
-    }while((abs(goal_position - present_position[0]) > 5) && (abs(goal_position - present_position[1]) > 5));
+    }while((abs(send_goal_position[0] - read_present_position[0]) > 5) && (abs(send_goal_position[1] - read_present_position[1]) > 5));
 
     if (index == 0)
       index = 1;
     else
       index = 0;
   }
+
+  log(std::string("WRITE TIME : "), sync_write_info.time);
+  log(std::string("READ TIME : "), sync_read_info.time);
+
+  log(std::string(" "));
+  ui->log_listView->setModel(&time_logging_model_);
+
+  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
+  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
+
+  writeLine(write_data);
+  writeLine(read_data);
 
   torque(get_id_[0], false);
   torque(get_id_[1], false);
@@ -396,7 +557,6 @@ bool MainWindow::writeRegister(uint8_t id, const char *item_name, int32_t data)
   else
   {
     printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result));
-
     return false;
   }
 
@@ -484,16 +644,6 @@ bool MainWindow::torque(uint8_t id, bool onoff)
   return error;
 }
 
-bool MainWindow::goalPosition(uint8_t id, float deg)
-{
-  bool error = false;
-  uint16_t goal = convertRadian2Value(get_id_[0], DEG2RAD(deg));
-
-  error = writeRegister(id, "Goal Position", goal);
-
-  return error;
-}
-
 int32_t MainWindow::readPosition(uint8_t id)
 {
   static int32_t value = 0;
@@ -514,9 +664,75 @@ int32_t MainWindow::readVelocity(uint8_t id)
   return 0;
 }
 
+int32_t* MainWindow::readIMU(uint8_t id)
+{
+  static int32_t imu_data[3] = {0, 0, 0};
+
+  readRegister(id, "IMU Roll",  &imu_data[0]);
+  readRegister(id, "IMU Pitch", &imu_data[1]);
+  readRegister(id, "IMU Yaw",   &imu_data[2]);
+
+  return imu_data;
+}
+
+int32_t* MainWindow::readTemp(uint8_t id)
+{
+  static int32_t temp_data = 0;
+
+  readRegister(id, "TempSensor", &temp_data);
+
+  return &temp_data;
+}
+
+int32_t* MainWindow::readColor(uint8_t id)
+{
+  static int32_t color_data[3] = {0, 0, 0};
+
+  readRegister(id, "ColorSensor Red",       &color_data[0]);
+  readRegister(id, "ColorSensor Green",     &color_data[1]);
+  readRegister(id, "ColorSensor Blue",      &color_data[2]);
+
+  return color_data;
+}
+
+int32_t* MainWindow::readADC(uint8_t id)
+{
+  static int32_t adc_data[2] = {0, 0};
+
+  readRegister(id, "AdcSensor CH1",            &adc_data[0]);
+  readRegister(id, "AdcSensor CH2",            &adc_data[1]);
+
+  return adc_data;
+}
+
+int32_t* MainWindow::readTime(uint8_t id)
+{
+  static int32_t time_data[13] = {0, };
+
+  readRegister(id, "TempSensor Read Time",   &time_data[0]);
+
+  readRegister(id, "ColorSensor Read Time",   &time_data[1]);
+
+  readRegister(id, "AdcSensor CH1 Read Time",   &time_data[2]);
+  readRegister(id, "AdcSensor CH2 Read Time",   &time_data[3]);
+  readRegister(id, "AdcSensor CH3 Read Time",   &time_data[4]);
+  readRegister(id, "AdcSensor CH4 Read Time",   &time_data[5]);
+  readRegister(id, "AdcSensor CH5 Read Time",   &time_data[6]);
+  readRegister(id, "AdcSensor CH6 Read Time",   &time_data[7]);
+  readRegister(id, "AdcSensor CH7 Read Time",   &time_data[8]);
+
+  readRegister(id, "I2C_Read_Speed CH1",   &time_data[9]);
+  readRegister(id, "I2C_Write_Speed CH1",  &time_data[10]);
+  readRegister(id, "I2C_Read_Speed CH2",   &time_data[11]);
+  readRegister(id, "I2C_Write_Speed CH2",  &time_data[12]);
+
+  return time_data;
+}
+
 void MainWindow::on_close_pushButton_clicked()
 {
   portHandler_->closePort();
+  file_->close();
   exit(0);
 }
 
@@ -585,64 +801,224 @@ float MainWindow::convertValue2Radian(int8_t id, int32_t value)
 void MainWindow::on_radioButton_57600_clicked()
 {
   int32_t baud = 57600;
+  get_baud_rate_ = 0;
 
-  for (int index = 0; index < tools_cnt_; index++)
+  for (int index = 0; index <= tools_cnt_; index++)
   {
-    torque(get_id_[index], false);
+    if (get_id_[index] < 100)
+      torque(get_id_[index], false);
     writeRegister(get_id_[index], "Baud Rate", 1);
   }
 
-  setBaudrate(baud);
+ if (setBaudrate(baud) == false)
+ {
+   QString qstr;
+   qstr = QString("<h2>CONNECTION</h2><p> Failed to set baudrate</p>");
+
+   QMessageBox::about(this, tr("INFO"), qstr);
+ }
+
+ ui->connect_pushButton->setEnabled(true);
 }
 
 void MainWindow::on_radioButton_115200_clicked()
 {
   int32_t baud = 115200;
+  get_baud_rate_ = 1;
 
-  for (int index = 0; index < tools_cnt_; index++)
+  for (int index = 0; index <= tools_cnt_; index++)
   {
-    torque(get_id_[index], false);
+    if (get_id_[index] < 100)
+      torque(get_id_[index], false);
     writeRegister(get_id_[index], "Baud Rate", 2);
   }
 
-  setBaudrate(baud);
+  if (setBaudrate(baud) == false)
+  {
+    QString qstr;
+    qstr = QString("<h2>CONNECTION</h2><p> Failed to set baudrate</p>");
+
+    QMessageBox::about(this, tr("INFO"), qstr);
+  }
+
+  ui->connect_pushButton->setEnabled(true);
 }
 
 void MainWindow::on_radioButton_1000000_clicked()
 {
   int32_t baud = 1000000;
+  get_baud_rate_ = 2;
 
-  for (int index = 0; index < tools_cnt_; index++)
+  for (int index = 0; index <= tools_cnt_; index++)
   {
-    torque(get_id_[index], false);
+    if (get_id_[index] < 100)
+      torque(get_id_[index], false);
     writeRegister(get_id_[index], "Baud Rate", 3);
   }
 
-  setBaudrate(baud);
+  if (setBaudrate(baud) == false)
+  {
+    QString qstr;
+    qstr = QString("<h2>CONNECTION</h2><p> Failed to set baudrate</p>");
+
+    QMessageBox::about(this, tr("INFO"), qstr);
+  }
+
+  ui->connect_pushButton->setEnabled(true);
 }
 
 void MainWindow::on_radioButton_2000000_clicked()
 {
   int32_t baud = 2000000;
+  get_baud_rate_ = 3;
 
-  for (int index = 0; index < tools_cnt_; index++)
+  for (int index = 0; index <= tools_cnt_; index++)
   {
-    torque(get_id_[index], false);
+    if (get_id_[index] < 100)
+      torque(get_id_[index], false);
     writeRegister(get_id_[index], "Baud Rate", 4);
   }
 
-  setBaudrate(baud);
+  if (setBaudrate(baud) == false)
+  {
+    QString qstr;
+    qstr = QString("<h2>CONNECTION</h2><p> Failed to set baudrate</p>");
+
+    QMessageBox::about(this, tr("INFO"), qstr);
+  }
+
+  ui->connect_pushButton->setEnabled(true);
 }
 
 void MainWindow::on_radioButton_3000000_clicked()
 {
   int32_t baud = 3000000;
+  get_baud_rate_ = 4;
 
-  for (int index = 0; index < tools_cnt_; index++)
+  for (int index = 0; index <= tools_cnt_; index++)
   {
-    torque(get_id_[index], false);
+    if (get_id_[index] < 100)
+      torque(get_id_[index], false);
     writeRegister(get_id_[index], "Baud Rate", 5);
   }
 
-  setBaudrate(baud);
+  if (setBaudrate(baud) == false)
+  {
+    QString qstr;
+    qstr = QString("<h2>CONNECTION</h2><p> Failed to set baudrate</p>");
+
+    QMessageBox::about(this, tr("INFO"), qstr);
+  }
+
+  ui->connect_pushButton->setEnabled(true);
+}
+
+uint32_t MainWindow::micros()
+{
+  struct timeval ts;
+
+  gettimeofday(&ts, NULL);
+  return ( ts.tv_sec * 1000 + ts.tv_usec );
+}
+
+void MainWindow::on_all_tools_read_button_clicked()
+{
+  output_info sync_write_info = {false, 0};
+  output_info sync_read_info = {false, 0};
+  static int index = 0;
+  int32_t read_present_position[3] = {0, 0, 0};
+  float goal_degree[2] = {90.0, -90.0};
+  int32_t send_goal_position[2] = {0, 0};
+  int32_t* time_data;
+
+  QString first_line = QString("ALL TOOLS 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
+  writeLine(first_line);
+
+  jointMode(get_id_[0], 200, 50);
+  jointMode(get_id_[1], 200, 50);
+
+  QTime t;
+  t.start();
+
+  log(std::string("ALL TOOLS 4 BYTE, BAUD_RATE : "), baud_rate_[get_baud_rate_]);
+
+  while (t.elapsed() < 1 * 1000) // 1 seconds
+  {
+    send_goal_position[0] = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree[index]));
+    send_goal_position[1] = convertRadian2Value(get_id_[1], DEG2RAD(goal_degree[index]));
+
+    sync_write_info = syncWrite(2, &send_goal_position[0]);
+
+    do
+    {
+      sync_read_info = syncRead(3, ADDR_DYNAMIXEL_PRESENT_POSITION, LEN_DYNAMIXEL_PRESENT_POSITION, &read_present_position[0]);
+
+    }while((abs(send_goal_position[0] - read_present_position[0]) > 5) && (abs(send_goal_position[1] - read_present_position[1]) > 5));
+
+    if (index == 0)
+      index = 1;
+    else
+      index = 0;
+  }
+
+  log(std::string("WRITE TIME : "), sync_write_info.time);
+  log(std::string("READ TIME : "), sync_read_info.time);
+
+  time_data = readTime(get_id_[2]);
+
+  log(std::string("TempSensor Read Time    : "), time_data[0]);
+  log(std::string("ColorSensor Read Time   : "), time_data[1]);
+  log(std::string("AdcSensor CH1 Read Time : "), time_data[2]);
+  log(std::string("AdcSensor CH2 Read Time : "), time_data[3]);
+  log(std::string("AdcSensor CH3 Read Time : "), time_data[4]);
+  log(std::string("AdcSensor CH4 Read Time : "), time_data[5]);
+  log(std::string("AdcSensor CH5 Read Time : "), time_data[6]);
+  log(std::string("AdcSensor CH6 Read Time : "), time_data[7]);
+  log(std::string("AdcSensor CH7 Read Time : "), time_data[8]);
+  log(std::string("I2C_Read_Speed CH1      : "), time_data[9]);
+  log(std::string("I2C_Write_Speed CH1     : "), time_data[10]);
+  log(std::string("I2C_Read_Speed CH2      : "), time_data[11]);
+  log(std::string("I2C_Write_Speed CH2     : "), time_data[12]);
+
+  log(std::string(" "));
+  ui->log_listView->setModel(&time_logging_model_);
+
+  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
+  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString(" ");
+
+  QString temp_read_data = QString("temp read time ") + QString::number(time_data[0]) + QString(" ");
+  QString color_read_data  = QString("color read time ")  + QString::number(time_data[1])  + QString(" ");
+  QString adc_ch1_read_data = QString("adc ch1 read time ") + QString::number(time_data[2]) + QString(" ");
+  QString adc_ch2_read_data  = QString("adc ch2 read time ")  + QString::number(time_data[3])  + QString(" ");
+  QString adc_ch3_read_data = QString("adc ch3 read time ") + QString::number(time_data[4]) + QString(" ");
+  QString adc_ch4_read_data  = QString("adc ch4 read time ")  + QString::number(time_data[5])  + QString(" ");
+  QString adc_ch5_read_data = QString("adc ch5 read time ") + QString::number(time_data[6]) + QString(" ");
+  QString adc_ch6_read_data  = QString("adc ch6 read time ")  + QString::number(time_data[7])  + QString(" ");
+  QString adc_ch7_read_data = QString("adc ch7 read time ") + QString::number(time_data[8]) + QString(" ");
+  QString i2c_ch1_read_data  = QString("i2c ch1 read speed ")  + QString::number(time_data[9])  + QString(" ");
+  QString i2c_ch1_write_data = QString("i2c ch1 write speed ") + QString::number(time_data[10]) + QString(" ");
+  QString i2c_ch2_read_data  = QString("i2c ch2 read speed ")  + QString::number(time_data[11])  + QString(" ");
+  QString i2c_ch2_write_data = QString("i2c ch2 write speed ") + QString::number(time_data[12]) + QString("\n");
+
+  writeLine(write_data);
+  writeLine(read_data);
+
+  writeLine(temp_read_data);
+  writeLine(color_read_data);
+
+  writeLine(adc_ch1_read_data);
+  writeLine(adc_ch2_read_data);
+  writeLine(adc_ch3_read_data);
+  writeLine(adc_ch4_read_data);
+  writeLine(adc_ch5_read_data);
+  writeLine(adc_ch6_read_data);
+  writeLine(adc_ch7_read_data);
+
+  writeLine(i2c_ch1_read_data);
+  writeLine(i2c_ch1_write_data);
+  writeLine(i2c_ch2_read_data);
+  writeLine(i2c_ch2_write_data);
+
+  torque(get_id_[0], false);
+  torque(get_id_[1], false);
 }

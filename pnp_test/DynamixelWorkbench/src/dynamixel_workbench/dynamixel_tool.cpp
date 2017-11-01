@@ -113,9 +113,13 @@ void DynamixelTool::setControlTable(char* name)
   { 
     setControlTable(XH430_W210);
   }
-  else if (!strncmp(name, "XH430-W350", strlen(name)))
-  { 
-    setControlTable(XH430_W350);
+//  else if (!strncmp(name, "XH430-W350", strlen(name)))
+//  {
+//    setControlTable(XH430_W350);
+//  }
+  else if (!strncmp(name, "PNP-DEVELOPMENT-BOARD", strlen(name)))
+  {
+    setControlTable(PNP_DEVELOPMENT_BOARD);
   }
 }
 
@@ -166,12 +170,27 @@ void DynamixelTool::setControlTable(uint16_t num)
     strcpy(model_name_, "XH430-V350");
   else if (num == XH430_W210)
     strcpy(model_name_, "XH430-W210");
-  else if (num == XH430_W350)
-    strcpy(model_name_, "XH430-W350");
+//  else if (num == XH430_W350)
+//    strcpy(model_name_, "XH430-W350");
+  else if (num == PNP_DEVELOPMENT_BOARD)
+    strcpy(model_name_, "PNP-DEVELOPMENT-BOARD");
 
-  item_               = getItem(num);
-  control_table_size_ = getSize();
-  info_               = getInfo(num);
+  item_ptr_               = getItem(num);
+  control_table_size_     = getSize();
+  info_ptr_               = getInfo(num);
+
+  for (int index = 0; index < control_table_size_; index++)
+    item_[index] = item_ptr_[index];
+
+  info_.velocity_to_value_ratio         = info_ptr_->velocity_to_value_ratio;
+  info_.torque_to_current_value_ratio   = info_ptr_->torque_to_current_value_ratio;
+
+  info_.value_of_0_radian_position      = info_ptr_->value_of_0_radian_position;
+  info_.value_of_min_radian_position    = info_ptr_->value_of_min_radian_position;
+  info_.value_of_max_radian_position    = info_ptr_->value_of_max_radian_position;
+
+  info_.min_radian                      = info_ptr_->min_radian;
+  info_.max_radian                      = info_ptr_->max_radian;
 }
 
 char* DynamixelTool::getModelName()
@@ -181,37 +200,37 @@ char* DynamixelTool::getModelName()
 
 float DynamixelTool::getVelocityToValueRatio()
 {
-  return info_->velocity_to_value_ratio;
+  return info_.velocity_to_value_ratio;
 }
 
 float DynamixelTool::getTorqueToCurrentValueRatio()
 {
-  return info_->torque_to_current_value_ratio;
+  return info_.torque_to_current_value_ratio;
 }
 
 int32_t DynamixelTool::getValueOfMinRadianPosition()
 {
-  return info_->value_of_min_radian_position;
+  return info_.value_of_min_radian_position;
 }
 
 int32_t DynamixelTool::getValueOfMaxRadianPosition()
 {
-  return info_->value_of_max_radian_position;
+  return info_.value_of_max_radian_position;
 }
 
 int32_t DynamixelTool::getValueOfZeroRadianPosition()
 {
-  return info_->value_of_0_radian_position;
+  return info_.value_of_0_radian_position;
 }
 
 float DynamixelTool::getMinRadian()
 {
-  return info_->min_radian;
+  return info_.min_radian;
 }
 
 float DynamixelTool::getMaxRadian()
 {
-  return info_->max_radian;
+  return info_.max_radian;
 }
 
 uint8_t DynamixelTool::getControlTableSize()

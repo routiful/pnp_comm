@@ -36,8 +36,11 @@ class DynamixelTool
   uint8_t id_;
 
   uint8_t control_table_size_;
-  ControlTableItem* item_;
-  ModelInfo* info_;
+  ControlTableItem* item_ptr_;
+  ModelInfo* info_ptr_;
+
+  ControlTableItem item_[60];
+  ModelInfo info_;
 
  public:
   DynamixelTool();

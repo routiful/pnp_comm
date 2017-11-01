@@ -93,6 +93,7 @@ void setAXItem()
 void setAXInfo()
 {
   model_info.velocity_to_value_ratio         = 86.03;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 512;
   model_info.value_of_min_radian_position    = 0;
@@ -172,6 +173,7 @@ void setRXItem()
 void setRXInfo()
 {
   model_info.velocity_to_value_ratio         = 86.03;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 512;
   model_info.value_of_min_radian_position    = 0;
@@ -255,6 +257,7 @@ void setEXItem()
 void setEXInfo()
 {
   model_info.velocity_to_value_ratio         = 86.03;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 2048;
   model_info.value_of_min_radian_position    = 0;
@@ -336,6 +339,7 @@ void setMXItem()
 void setMXInfo()
 {
   model_info.velocity_to_value_ratio         = 83.77;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 2048;
   model_info.value_of_min_radian_position    = 0;
@@ -423,6 +427,7 @@ void setExtMXItem()
 void setExtMXInfo()
 {
   model_info.velocity_to_value_ratio         = 83.77;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 2048;
   model_info.value_of_min_radian_position    = 0;
@@ -501,6 +506,7 @@ void setXL320Item()
 void setXL320Info()
 {
   model_info.velocity_to_value_ratio         = 86.03;
+  model_info.torque_to_current_value_ratio   = 0.0;
   
   model_info.value_of_0_radian_position      = 512;
   model_info.value_of_min_radian_position    = 0;
@@ -599,6 +605,7 @@ void setXLItem()
 void setXLInfo()
 {
   model_info.velocity_to_value_ratio         = 41.71;
+  model_info.torque_to_current_value_ratio   = 0.0;
 
   model_info.value_of_0_radian_position      = 2048;
   model_info.value_of_min_radian_position    = 0;
@@ -796,6 +803,7 @@ void setXHItem()
 void setXHInfo()
 {
   model_info.velocity_to_value_ratio       = 41.71;
+  model_info.torque_to_current_value_ratio   = 0.0;
 
   model_info.value_of_min_radian_position  = 0;
   model_info.value_of_0_radian_position    = 2048;
@@ -894,14 +902,14 @@ void setPNPItem()
   item[0]  = {0  , "Model Number"             , 2 , READ       , EEPROM};
   item[1]  = {6  , "Version of Firmware"      , 1 , READ       , EEPROM};
   item[2]  = {7  , "ID"                       , 1 , READ_WRITE , EEPROM};
-  item[3]  = {8  , "Baud Rate"                , 1 , READ_WRITE , EEPROM};
+  item[3]  = {8  , "Baud Rate"                , 1 , READ_WRITE , RAM};
 
   item[4]  = {64 , "IMU Roll"                 , 2 , READ , RAM};
   item[5]  = {66 , "IMU Pitch"                , 2 , READ , RAM};
   item[6]  = {68 , "IMU Yaw"                  , 2 , READ , RAM};
   item[7]  = {70 , "TempSensor"               , 2 , READ , RAM};
   item[8]  = {72 , "TempSensor Read Time"     , 4 , READ , RAM};
-  item[9]  = {80 , "ColorSensor REd"          , 2 , READ , RAM};
+  item[9]  = {80 , "ColorSensor Red"          , 2 , READ , RAM};
   item[10] = {82 , "ColorSensor Green"        , 2 , READ , RAM};
   item[11] = {84 , "ColorSensor Blue"         , 2 , READ , RAM};
   item[12] = {86 , "ColorSensor Read Time"    , 4 , READ , RAM};
@@ -930,10 +938,12 @@ void setPNPItem()
 void setPNPInfo()
 {
   model_info.velocity_to_value_ratio         = 0.0;
+  model_info.torque_to_current_value_ratio   = 0.0;
 
   model_info.value_of_0_radian_position      = 0;
   model_info.value_of_min_radian_position    = 0;
   model_info.value_of_max_radian_position    = 0;
+
   model_info.min_radian                      = 0;
   model_info.max_radian                      = 0;
 }

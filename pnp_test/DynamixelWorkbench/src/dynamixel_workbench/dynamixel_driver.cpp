@@ -816,7 +816,7 @@ bool DynamixelDriver::syncWrite(const char *item_name, int32_t *data)
   return true;
 }
 
-void DynamixelDriver::addSyncRead(char *item_name)
+void DynamixelDriver::addSyncRead(const char *item_name)
 {
   ControlTableItem *cti;
   cti = tools_[0].getControlItem(item_name);
@@ -831,7 +831,7 @@ void DynamixelDriver::addSyncRead(char *item_name)
   sync_read_handler_cnt_++;
 }
 
-bool DynamixelDriver::syncRead(char *item_name, int32_t *data)
+bool DynamixelDriver::syncRead(const char *item_name, int32_t *data)
 {
   int dxl_comm_result = COMM_RX_FAIL;
   bool dxl_addparam_result = false;

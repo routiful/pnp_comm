@@ -36,7 +36,7 @@ HEADERS  += mainwindow.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_item.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_tool.h \
     DynamixelWorkbench/include/dynamixel_workbench/dynamixel_workbench.h \
-    DynamixelWorkbench/src/DynamixelWorkbench.h \
+    DynamixelWorkbench/src/DynamixelWorkbench.h
 
 FORMS    += mainwindow.ui
 
