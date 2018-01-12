@@ -931,8 +931,15 @@ void setPNPItem()
   item[28] = {204, "I2C_Write_Speed CH1"      , 4 , READ , RAM};
   item[29] = {208, "I2C_Read_Speed CH2"       , 4 , READ , RAM};
   item[30] = {212, "I2C_Write_Speed CH2"      , 4 , READ , RAM};
+  item[31] = {216, "IR TempSensor1"           , 4 , READ , RAM};
+  item[32] = {220, "IR TempSensor2"           , 4 , READ , RAM};
+  item[33] = {224, "IR TempSensor3"           , 4 , READ , RAM};
+  item[34] = {228, "IR TempSensor4"           , 4 , READ , RAM};
+  item[35] = {232, "Magnetic Sensor1"         , 4 , READ , RAM};
+  item[36] = {236, "Magnetic Sensor2"         , 4 , READ , RAM};
+  item[37] = {240, "Magnetic Sensor3"         , 4 , READ , RAM};
 
-  control_table_size = 31;
+  control_table_size = 38;
 }
 
 void setPNPInfo()

@@ -16,9 +16,15 @@
 
 #define DEVICE_NAME "/dev/ttyUSB0"
 
-#define DXL_1    1
-#define DXL_2    2
-#define SENSOR   100
+#define DXL_CON_NUM  24
+#define SENSOR_1     124
+#define SENSOR_2     125
+#define SENSOR_3     102
+#define SENSOR_4     126
+
+#define INITIAL_DEGREE 90.0f
+#define GOAL_DEGREE -90.0f
+#define ZERO_DEGREE 0.0f
 
 #define DEG2RAD(x)  (x * 0.01745329252)  // *PI/180
 #define RAD2DEG(x)  (x * 57.2957795131)  // *180/PI
@@ -34,9 +40,6 @@
 
 #define ADDR_DYNAMIXEL_PRESENT_POSITION 132
 #define LEN_DYNAMIXEL_PRESENT_POSITION  4
-
-#define ADDR_PNP_DEV_BOARD_ADCSENSOR_CH4_READ_TIME 116
-#define LEN_PNP_DEV_BOARD_ADCSENSOR_CH4_READ_TIME  4
 
 typedef struct
 {
@@ -68,6 +71,9 @@ public:
   bool jointMode(uint8_t id, uint16_t vel, uint16_t acc);
   bool torque(uint8_t id, bool onoff);
 
+  void writeSingleDXL(float goal_degree);
+  void writeMultiDXL(uint8_t dxl_num, float goal_degree);
+
   int32_t readPosition(uint8_t id);
   int32_t readVelocity(uint8_t id);
   int32_t* readTemp(uint8_t id);
@@ -75,6 +81,8 @@ public:
   int32_t* readColor(uint8_t id);
   int32_t* readADC(uint8_t id);
   int32_t* readTime(uint8_t id);
+  int32_t* readIRTemp(uint8_t id);
+  int32_t* readMag(uint8_t id);
 
   void initSyncWrite();
   output_info syncWrite(uint8_t tool_num, int32_t *data);
@@ -139,9 +147,9 @@ private:
 
   dynamixel::GroupSyncRead  *allToolsSyncRead_;
 
-  DynamixelTool tools_[5];
+  DynamixelTool tools_[150];
 
-  uint8_t get_id_[5];
+  uint8_t get_id_[150];
   uint8_t tools_cnt_;
 
   uint32_t baud_rate_[BAUDRATE_NUM];

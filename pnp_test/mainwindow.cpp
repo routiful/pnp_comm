@@ -7,11 +7,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);  // Do not delete this
   qtimer_ = new QTimer;
-  file_   = new QFile;
+  //file_   = new QFile;
 
   QString filename = QTime::currentTime().toString() + QString(" COMMUNICATION TEST(ROBOTIS)");
-  file_->setFileName(filename);
-  file_->open(QIODevice::WriteOnly);
+  //file_->setFileName(filename);
+  //file_->open(QIODevice::WriteOnly);
 
   baud_rate_[0] = 57600;
   baud_rate_[1] = 115200;
@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+  for (uint8_t index = 0; index < DXL_CON_NUM; index++)
+    torque(get_id_[index], false);
+
   delete ui;
 }
 
@@ -213,38 +216,66 @@ void MainWindow::updateData()
 {
   int32_t dxl_1_present_position = 0, dxl_2_present_position = 0;
   int32_t dxl_1_present_velocity = 0, dxl_2_present_veloticy = 0;
-  int32_t *imu_data, *temp_data, *color_data, *adc_data;
+  int32_t *imu_data, *temp_data, *color_data, *adc_data, *ir_temp_data, *magnetic_data;
 
-  for (int index = 0; index < tools_cnt_; index++)
-  {
-    if (get_id_[index] == DXL_1)
-    {
-      dxl_1_present_position = readPosition(DXL_1);
-      dxl_1_present_velocity = readVelocity(DXL_1);
+//  for (int index = 0; index < tools_cnt_; index++)
+//  {
+//    if (get_id_[index] == DXL_1)
+//    {
+//      dxl_1_present_position = readPosition(DXL_1);
+//      dxl_1_present_velocity = readVelocity(DXL_1);
 
-      showData(std::string("< DYNAMIXEL 1 >"));
-      showData(std::string("present_position  : "), dxl_1_present_position);
-      showData(std::string("present_velocity  : "), dxl_1_present_velocity);
-      showData(std::string(" "));
-    }
+//      showData(std::string("< DYNAMIXEL 1 >"));
+//      showData(std::string("present_position  : "), dxl_1_present_position);
+//      showData(std::string("present_velocity  : "), dxl_1_present_velocity);
+//      showData(std::string(" "));
+//    }
 
-    if (get_id_[index] == DXL_2)
-    {
-      dxl_2_present_position = readPosition(DXL_2);
-      dxl_2_present_veloticy = readVelocity(DXL_2);
+//    if (get_id_[index] == DXL_2)
+//    {
+//      dxl_2_present_position = readPosition(DXL_2);
+//      dxl_2_present_veloticy = readVelocity(DXL_2);
 
-      showData(std::string("< DYNAMIXEL 2 >"));
-      showData(std::string("present_position  : "), dxl_2_present_position);
-      showData(std::string("present_velocity  : "), dxl_2_present_veloticy);
-      showData(std::string(" "));
-    }
+//      showData(std::string("< DYNAMIXEL 2 >"));
+//      showData(std::string("present_position  : "), dxl_2_present_position);
+//      showData(std::string("present_velocity  : "), dxl_2_present_veloticy);
+//      showData(std::string(" "));
+//    }
 
-    if (get_id_[index] == SENSOR)
-    {
-      imu_data   = readIMU(SENSOR);
-      temp_data  = readTemp(SENSOR);
-      color_data = readColor(SENSOR);
-      adc_data   = readADC(SENSOR);
+//    if (get_id_[index] == SENSOR_1)
+//    {
+      imu_data   = readIMU(SENSOR_1);
+//      temp_data  = readTemp(SENSOR_2);
+      color_data = readColor(SENSOR_3);
+//      adc_data   = readADC(SENSOR);
+
+      ir_temp_data  = readIRTemp(SENSOR_2);
+      magnetic_data = readMag(SENSOR_4);
+
+      /// DXL CONTROL//////
+
+//      if (temp_data[0] > 27)
+//        writeMultiDXL(DXL_CON_NUM, ZERO_DEGREE);
+
+      if (ir_temp_data[0] > 27)
+        writeMultiDXL(DXL_CON_NUM, ZERO_DEGREE);
+
+      if (magnetic_data[0] > 100)
+        writeMultiDXL(DXL_CON_NUM, GOAL_DEGREE);
+
+      if (imu_data[1] < -10)
+        writeMultiDXL(DXL_CON_NUM, -GOAL_DEGREE);
+
+      if (imu_data[1] > 10)
+        writeMultiDXL(DXL_CON_NUM, GOAL_DEGREE);
+
+      if (color_data[0] > 280)
+        writeMultiDXL(DXL_CON_NUM, -GOAL_DEGREE);
+
+      if (color_data[2] > 280)
+        writeMultiDXL(DXL_CON_NUM, GOAL_DEGREE);
+
+      ///////////////////////
 
       showData(std::string("< PNP DEV BOARD >"));
       showData(std::string("imu_data[Roll]    : "), imu_data[0]);
@@ -252,24 +283,91 @@ void MainWindow::updateData()
       showData(std::string("imu_data[Yaw]     : "), imu_data[2]);
       showData(std::string(" "));
 
-      showData(std::string("temp_data         : "), temp_data[0]);
-      showData(std::string(" "));
+//      showData(std::string("temp_data         : "), temp_data[0]);
+//      showData(std::string(" "));
 
       showData(std::string("color_data[RED]   : "), color_data[0]);
       showData(std::string("color_data[GREEN] : "), color_data[1]);
       showData(std::string("color_data[BLUE]  : "), color_data[2]);
       showData(std::string(" "));
 
-      showData(std::string("adc_data[ch 1]    : "), adc_data[0]);
-      showData(std::string("adc_data[ch 2]    : "), adc_data[2]);
+//      showData(std::string("adc_data[ch 1]    : "), adc_data[0]);
+//      showData(std::string("adc_data[ch 2]    : "), adc_data[2]);
+//      showData(std::string(" "));
+
+      showData(std::string("ir_temp_data      : "), ir_temp_data[0]);
       showData(std::string(" "));
-    }
-  }
+
+      showData(std::string("magnetic_data     : "), magnetic_data[0]);
+      showData(std::string(" "));
+//    }
+//  }
 
   ui->pnp_listView->setModel(&logging_model_);
 
   row_count_ = 0;
 
+}
+
+void MainWindow::writeSingleDXL(float goal_degree)
+{
+  output_info sync_write_info = {false, 0};
+//  output_info sync_read_info = {false, 0};
+//  int32_t read_present_position = 0;
+  int32_t send_goal_position = 0;
+
+  jointMode(get_id_[0], 200, 50);
+
+  QTime t;
+  t.start();
+
+  while (t.elapsed() < 2 * 1000) // 5 seconds
+  {
+    send_goal_position = convertRadian2Value(get_id_[0], DEG2RAD(goal_degree));
+
+    sync_write_info = syncWrite(1, &send_goal_position);
+
+//    do
+//    {
+//      sync_read_info = syncRead(1, ADDR_DYNAMIXEL_PRESENT_POSITION, LEN_DYNAMIXEL_PRESENT_POSITION, &read_present_position);
+
+//    }while((abs(send_goal_position - read_present_position) > 5));
+  }
+
+  torque(get_id_[0], false);
+}
+
+void MainWindow::writeMultiDXL(uint8_t dxl_num, float goal_degree)
+{
+  output_info sync_write_info = {false, 0};
+//  output_info sync_read_info = {false, 0};
+//  int32_t read_present_position[dxl_num];
+  int32_t send_goal_position[dxl_num];
+
+  for (uint8_t index = 0; index < dxl_num; index++)
+    jointMode(get_id_[index], 200, 50);
+
+  QTime t;
+  t.start();
+
+//  while (t.elapsed() < 1 * 1000) // 5 seconds
+//  {
+    for (uint8_t index = 0; index < dxl_num; index++)
+    {
+      send_goal_position[index] = convertRadian2Value(get_id_[index], DEG2RAD(goal_degree));
+    }
+
+    sync_write_info = syncWrite(dxl_num, &send_goal_position[0]);
+
+//    do
+//    {
+//      sync_read_info = syncRead(dxl_num, ADDR_DYNAMIXEL_PRESENT_POSITION, LEN_DYNAMIXEL_PRESENT_POSITION, &read_present_position[0]);
+
+//    }while((abs(send_goal_position[0] - read_present_position[0]) > 5) && (abs(send_goal_position[1] - read_present_position[1]) > 5));
+//  }
+
+//  for (uint8_t index = 0; index < dxl_num; index++)
+//    torque(get_id_[index], false);
 }
 
 void MainWindow::showData(const std::string &msg, int64_t value)
@@ -329,18 +427,18 @@ void MainWindow::log(const std::string &msg)
 void MainWindow::on_connect_pushButton_clicked()
 {
   uint8_t error = 0;
-  uint8_t id = 0;
+  uint16_t id = 0;
   uint16_t model_num = 0;
-  uint8_t baud_rate_index = 0;
+  uint8_t baud_rate_index = 2;
 
   tools_cnt_ = 0;
   qtimer_->stop();
 
-  while (baud_rate_index < BAUDRATE_NUM)
-  {
+//  while (baud_rate_index < BAUDRATE_NUM)
+//  {
     setBaudrate(baud_rate_[baud_rate_index]);
 
-    for (id = 1; id <= 110; id++)
+    for (id = 1; id <= 200; id++)
     {
       ui->begin_progressBar->setValue(id);
       if (packetHandler_->ping(portHandler_, id, &model_num, &error) == COMM_SUCCESS)
@@ -354,26 +452,27 @@ void MainWindow::on_connect_pushButton_clicked()
       }
     }
 
-    if (tools_cnt_ != 0)
-      break;
+//    if (tools_cnt_ != 0)
+//      break;
 
-    baud_rate_index++;
-  }
+//    baud_rate_index++;
+//  }
 
   get_baud_rate_ = baud_rate_index;
 
   if (tools_cnt_ != 0)
   {
     QString qstr;
-    qstr = QString("<h2>CONNECTION</h2><p> <strong>ID : %1 %2 %3</strong> <br /> Initialization Success</p>").arg(get_id_[0]).arg(get_id_[1]).arg(get_id_[2]);
+//    qstr = QString("<h2>CONNECTION</h2><p> <strong>ID : %1 %2 %3</strong> <br /> Initialization Success</p>").arg(get_id_[0]).arg(get_id_[1]).arg(get_id_[2]);
 
+    qstr = QString("<h2>CONNECTION</h2> <p>Initialization Success</p>");
     QMessageBox::about(this, tr("INFO"), qstr);
 
-    ui->radioButton_57600->setDisabled(false);
-    ui->radioButton_115200->setDisabled(false);
-    ui->radioButton_1000000->setDisabled(false);
-    ui->radioButton_2000000->setDisabled(false);
-    ui->radioButton_3000000->setDisabled(false);
+//    ui->radioButton_57600->setDisabled(false);
+//    ui->radioButton_115200->setDisabled(false);
+//    ui->radioButton_1000000->setDisabled(false);
+//    ui->radioButton_2000000->setDisabled(false);
+//    ui->radioButton_3000000->setDisabled(false);
 
     if (baud_rate_index == 0)
       ui->radioButton_57600->setChecked(true);
@@ -387,6 +486,8 @@ void MainWindow::on_connect_pushButton_clicked()
       ui->radioButton_3000000->setChecked(true);
 
     ui->connect_pushButton->setDisabled(true);
+
+    writeMultiDXL(DXL_CON_NUM, ZERO_DEGREE);
 
     connect(qtimer_, SIGNAL(timeout()), this, SLOT(updateData()));
     qtimer_->start(TIMER_MILLIS);
@@ -416,8 +517,8 @@ void MainWindow::on_single_read_write_button_clicked()
   float goal_degree[2] = {90.0, -90.0};
   int32_t send_goal_position = 0;
 
-  QString first_line = QString("SINGLE DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
-  writeLine(first_line);
+//  QString first_line = QString("SINGLE DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
+//  writeLine(first_line);
 
   jointMode(get_id_[0], 200, 50);
 
@@ -444,17 +545,17 @@ void MainWindow::on_single_read_write_button_clicked()
       index = 0;
   }
 
-  log(std::string("WRITE TIME : "), sync_write_info.time);
-  log(std::string("READ TIME : "), sync_read_info.time);
+//  log(std::string("WRITE TIME : "), sync_write_info.time);
+//  log(std::string("READ TIME : "), sync_read_info.time);
 
-  log(std::string(" "));
-  ui->log_listView->setModel(&time_logging_model_);
+//  log(std::string(" "));
+//  ui->log_listView->setModel(&time_logging_model_);
 
-  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
-  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
+//  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
+//  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
 
-  writeLine(write_data);
-  writeLine(read_data);
+//  writeLine(write_data);
+//  writeLine(read_data);
 
   torque(get_id_[0], false);
 }
@@ -468,8 +569,8 @@ void MainWindow::on_multi_read_write_button_clicked()
   float goal_degree[2] = {90.0, -90.0};
   int32_t send_goal_position[2] = {0, 0};
 
-  QString first_line = QString("MULTI DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
-  writeLine(first_line);
+//  QString first_line = QString("MULTI DYNAMIXEL 4 BYTE ") + QString("BaudRate ") + QString::number(baud_rate_[get_baud_rate_]) + QString(" ");
+//  writeLine(first_line);
 
   jointMode(get_id_[0], 200, 50);
   jointMode(get_id_[1], 200, 50);
@@ -477,7 +578,7 @@ void MainWindow::on_multi_read_write_button_clicked()
   QTime t;
   t.start();
 
-  log(std::string("MULTI DYNAMIXEL 4 BYTE, BAUD_RATE : "), baud_rate_[get_baud_rate_]);
+//  log(std::string("MULTI DYNAMIXEL 4 BYTE, BAUD_RATE : "), baud_rate_[get_baud_rate_]);
 
   while (t.elapsed() < 1 * 1000) // 5 seconds
   {
@@ -498,17 +599,17 @@ void MainWindow::on_multi_read_write_button_clicked()
       index = 0;
   }
 
-  log(std::string("WRITE TIME : "), sync_write_info.time);
-  log(std::string("READ TIME : "), sync_read_info.time);
+//  log(std::string("WRITE TIME : "), sync_write_info.time);
+//  log(std::string("READ TIME : "), sync_read_info.time);
 
-  log(std::string(" "));
-  ui->log_listView->setModel(&time_logging_model_);
+//  log(std::string(" "));
+//  ui->log_listView->setModel(&time_logging_model_);
 
-  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
-  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
+//  QString write_data = QString("dynamixel write time ") + QString::number(sync_write_info.time) + QString(" ");
+//  QString read_data  = QString("dynamixel read time ")  + QString::number(sync_read_info.time)  + QString("\n");
 
-  writeLine(write_data);
-  writeLine(read_data);
+//  writeLine(write_data);
+//  writeLine(read_data);
 
   torque(get_id_[0], false);
   torque(get_id_[1], false);
@@ -627,9 +728,9 @@ bool MainWindow::jointMode(uint8_t id, uint16_t vel, uint16_t acc)
   bool error = false;
   const uint8_t position_control_mode = 3;
 
-  torque(id, false);
+//  torque(id, false);
 
-  error = writeRegister(id, "Operating Mode", position_control_mode);
+//  error = writeRegister(id, "Operating Mode", position_control_mode);
 
   torque(id, true);
 
@@ -698,6 +799,24 @@ int32_t* MainWindow::readColor(uint8_t id)
   return color_data;
 }
 
+int32_t* MainWindow::readIRTemp(uint8_t id)
+{
+  static int32_t ir_temp_data = 0;
+
+  readRegister(id, "IR TempSensor1", &ir_temp_data);
+
+  return &ir_temp_data;
+}
+
+int32_t* MainWindow::readMag(uint8_t id)
+{
+  static int32_t mag_data = 0;
+
+  readRegister(id, "Magnetic Sensor3", &mag_data);
+
+  return &mag_data;
+}
+
 int32_t* MainWindow::readADC(uint8_t id)
 {
   static int32_t adc_data[2] = {0, 0};
@@ -735,7 +854,7 @@ int32_t* MainWindow::readTime(uint8_t id)
 void MainWindow::on_close_pushButton_clicked()
 {
   portHandler_->closePort();
-  file_->close();
+  //file_->close();
   exit(0);
 }
 

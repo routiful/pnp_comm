@@ -27,7 +27,7 @@
   #include "DynamixelSDK/c++/src/DynamixelSDK.h"
 #endif
 
-#define DXL_NUM 16
+#define DXL_NUM 100
 #define MAX_HANDLER 5
 
 #define BYTE  1
